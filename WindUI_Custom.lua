@@ -1485,8 +1485,6 @@ return ab end function a.f()
 
 function a.g()
     local aa = cloneref or clonereference or function(a) return a end
-
-    local function New(ServiceId)
         local Panda = loadstring(game:HttpGet("https://vss.pandadevelopment.net/virtual/file/0a4febe4a9724c69"))()
         local Auth = Panda.New()
 
@@ -1503,13 +1501,10 @@ function a.g()
             Auth.Copy()  -- VSS handles clipboard internally
         end
 
-        return {
-            Verify = ValidateKey,
-            Copy = CopyLink,
-        }
-    end
-
-    return { New = New }  -- return a MODULE, not an instance
+    return {
+        Verify = ValidateKey,
+        Copy = CopyLink,
+    }
 end
 
 
