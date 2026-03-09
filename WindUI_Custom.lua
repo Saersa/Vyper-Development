@@ -10752,7 +10752,6 @@ local function getTimeRemaining()
     end
 
     if remaining <= 0 then
-        game:GetService("Players").LocalPlayer:Kick("Your key has expired. Please renew it.")
         return "Expired", Color3.fromRGB(255, 50, 50)
     end
 
