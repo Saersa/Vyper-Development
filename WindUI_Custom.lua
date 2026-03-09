@@ -1481,7 +1481,7 @@ return ab end function a.f()
 
 
 
-
+local ac={}
 
 function ac.New(ad)
     local aa = cloneref or clonereference or function(a) return a end
