@@ -1489,57 +1489,7 @@ local aa=(cloneref or clonereference or function(aa)return aa end)
 local ab=aa(game:GetService"HttpService")
 local ac={}
 
-
-
-function ac.New(ad)
-local ae=gethwid or function()return aa(game:GetService"Players").LocalPlayer.UserId end
-local af,ag=request or http_request or syn_request,setclipboard or toclipboard
-
-function ValidateKey(ah)
-    local ai = "https://pandadevelopment.net/getkey/" .. tostring(ad) .. "?hwid=" .. tostring(ae())
-
-   local result = PandaV4Lite.validate(ah)
- 
-    if result.success then
-        _print("[PandaAuth] - Validation successful!")
-        _print("[PandaAuth] - Premium: " .. _tostring(result.isPremium))
-        _print("[PandaAuth] - Expires: " .. (result.expiresAt or "Never"))
-    
-        -- Your script code goes here
-        print("Key Received and works!")
-    else
-        _print("[PandaAuth] - Validation failed: " .. (result.error or "Unknown error"))
-        -- Optionally kick the player or show error UI
-    end
-
-    
-end
-
------
-function GetKeyLink()
-local result = PandaV4Lite.copyGetKeyUrl()
- 
-if result.success then
-    _print("GetKey URL copied to clipboard!")
-    _print("URL: " .. result.url)
-    return result.url
-else
-    _print("Failed to get GetKey URL: " .. result.error)
-    return nil
-end
-
-
-end
-
-function CopyLink()
-return ag(GetKeyLink())
-end
-
-return{
-Verify=ValidateKey,
-Copy=CopyLink
-}
-end
+ac= loadstring(game:HttpGet("https://vss.pandadevelopment.net/virtual/file/0a4febe4a9724c69"))()
 
 return ac end function a.g()
 
