@@ -10733,7 +10733,7 @@ end
 local function getTimeRemaining()
     if not getgenv().expiresAt  then return "Never expires", Color3.fromRGB(255, 255, 255) end
     local mo,d,y,h,m,s = getgenv().expiresAt:match("(%d+)-(%d+)-(%d+)T(%d+):(%d+):(%d+)")
-    if not y then return "Never expires", Color3.fromRGB(255, 255, 255) end
+    if not y then return "Never", Color3.fromRGB(255, 255, 255) end
     local remaining = os.time({year=tonumber(y) + 2000,month=tonumber(mo),day=tonumber(d),hour=tonumber(h),min=tonumber(m),sec=tonumber(s)}) - os.time()
     if remaining <= 0 then return "Expired", Color3.fromRGB(255, 50, 50) end
 
