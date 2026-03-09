@@ -10733,25 +10733,26 @@ Enum.ThumbnailSize.Size420x420
 return aC
 end
 local function getTimeRemaining()
-    if not getgenv().expiresAt then return "Never expires" end
+    if not _G.KeyExpiry then return "Never expires", Color3.fromRGB(255, 255, 255) end
+    local y,mo,d,h,m,s = _G.KeyExpiry:match("(%d+)-(%d+)-(%d+)T(%d+):(%d+):(%d+)")
+    if not y then return "Never expires", Color3.fromRGB(255, 255, 255) end
+    local remaining = os.time({year=tonumber(y),month=tonumber(mo),day=tonumber(d),hour=tonumber(h),min=tonumber(m),sec=tonumber(s)}) - os.time()
+    if remaining <= 0 then return "Expired", Color3.fromRGB(255, 50, 50) end
 
-    -- expiresAt is ISO 8601: "2026-05-01T00:00:00Z"
-    local y, mo, d, h, m, s = getgenv().expiresAt:match("(%d+)-(%d+)-(%d+)T(%d+):(%d+):(%d+)")
-    if not y then return "Never expires" end
+    local green = Color3.fromRGB(0, 255, 0)
+    local red   = Color3.fromRGB(255, 50, 50)
 
-    local expireTime = os.time({
-        year=tonumber(y), month=tonumber(mo), day=tonumber(d),
-        hour=tonumber(h), min=tonumber(m), sec=tonumber(s)
-    })
+    local color
+    local twelveHours = 43200  -- 12 hours in seconds
+    if remaining >= twelveHours then
+        color = green  -- full green above 12 hours
+    else
+        -- t goes from 0 (at 12h) to 1 (at 0h)
+        local t = 1 - (remaining / twelveHours)
+        color = green:Lerp(red, t)
+    end
 
-    local remaining = expireTime - os.time()
-    if remaining <= 0 then return "Expired" end
-
-    local days = math.floor(remaining / 86400)
-    local hours = math.floor((remaining % 86400) / 3600)
-    local mins = math.floor((remaining % 3600) / 60)
-
-    return string.format("%dd %dh %dm", days, hours, mins)
+    return string.format("%dd %dh %dm", math.floor(remaining/86400), math.floor((remaining%86400)/3600), math.floor((remaining%3600)/60)), color
 end
 
 aB=al("TextButton",{
@@ -10843,20 +10844,23 @@ TextXAlignment="Left",
 Name="UserName"
 }),
 
- 
-al("TextLabel",{
-Text="Time Left: " .. getTimeRemaining(),
-TextSize=15,
-TextTransparency=.3,
-TextColor3=Color3.fromRGB(0, 0, 0), -- Red color for the timer
-FontFace=Font.new(ak.Font,Enum.FontWeight.Medium),
-AutomaticSize="Y",
-BackgroundTransparency=1,
-Size=UDim2.new(1,-27,0,0),
-TextTruncate="AtEnd",
-TextXAlignment="Left",
-Name="KeySystemTimer"
+local timerText, timerColor = getTimeRemaining()
+
+al("TextLabel", {
+    Text = "Time Left: " .. timerText,
+    TextSize = 15,
+    TextTransparency = .6,
+    TextColor3 = timerColor,  -- ← dynamic color
+    FontFace = Font.new(ak.Font, Enum.FontWeight.Medium),
+    AutomaticSize = "Y",
+    BackgroundTransparency = 1,
+    Size = UDim2.new(1, -27, 0, 0),
+    TextTruncate = "AtEnd",
+    TextXAlignment = "Left",
+    Visible = getgenv().expiresAt ~= nil,
+    Name = "KeySystemTimer"
 }),
+
 
 
 
