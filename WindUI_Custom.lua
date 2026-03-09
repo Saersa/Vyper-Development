@@ -10846,21 +10846,19 @@ Name="UserName"
 
 local timerText, timerColor = getTimeRemaining()
 
-al("TextLabel", {
-    Text = "Time Left: " .. timerText,
-    TextSize = 15,
-    TextTransparency = .6,
-    TextColor3 = timerColor,  -- ← dynamic color
-    FontFace = Font.new(ak.Font, Enum.FontWeight.Medium),
-    AutomaticSize = "Y",
-    BackgroundTransparency = 1,
-    Size = UDim2.new(1, -27, 0, 0),
-    TextTruncate = "AtEnd",
-    TextXAlignment = "Left",
-    Visible = getgenv().expiresAt ~= nil,
-    Name = "KeySystemTimer"
+al("TextLabel",{
+Text="Time Left: " .. timerText,
+TextSize=15,
+TextTransparency=0.6,
+TextColor3 = timerColor,  -- ← dynamic color
+FontFace=Font.new(ak.Font,Enum.FontWeight.Medium),
+AutomaticSize="Y",
+BackgroundTransparency=1,
+Size=UDim2.new(1,-27,0,0),
+TextTruncate="AtEnd",
+TextXAlignment="Left",
+Name="KeySystemTimer",
 }),
-
 
 
 
