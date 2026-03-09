@@ -10733,8 +10733,8 @@ Enum.ThumbnailSize.Size420x420
 return aC
 end
 local function getTimeRemaining()
-    if not _G.KeyExpiry then return "Never expires", Color3.fromRGB(255, 255, 255) end
-    local y,mo,d,h,m,s = _G.KeyExpiry:match("(%d+)-(%d+)-(%d+)T(%d+):(%d+):(%d+)")
+    if not getgenv().expiresAt  then return "Never expires", Color3.fromRGB(255, 255, 255) end
+    local y,mo,d,h,m,s = getgenv().expiresAt:match("(%d+)-(%d+)-(%d+)T(%d+):(%d+):(%d+)")
     if not y then return "Never expires", Color3.fromRGB(255, 255, 255) end
     local remaining = os.time({year=tonumber(y),month=tonumber(mo),day=tonumber(d),hour=tonumber(h),min=tonumber(m),sec=tonumber(s)}) - os.time()
     if remaining <= 0 then return "Expired", Color3.fromRGB(255, 50, 50) end
