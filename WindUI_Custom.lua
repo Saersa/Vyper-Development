@@ -1494,7 +1494,7 @@ local ac = {}
 ac = loadstring(game:HttpGet("https://vss.pandadevelopment.net/virtual/file/0a4febe4a9724c69"))()
 
 return ac
-end
+end 
 
 
 
