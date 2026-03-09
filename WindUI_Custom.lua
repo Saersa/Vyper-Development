@@ -1486,8 +1486,6 @@ local ac = {}
 function ac.New(ad)
     local PandaModule = loadstring(game:HttpGet("https://vss.pandadevelopment.net/virtual/file/0a4febe4a9724c69"))()
 
-    -- PandaModule IS your panda_script.lua (already has {New=fn} shape)
-    -- PandaV4Lite is injected by VSS when it runs, so .Verify and .Copy work
     return PandaModule.New(ad)
 end
 
@@ -10754,8 +10752,23 @@ local function getTimeRemaining()
 
     return string.format("%dd %dh %dm", math.floor(remaining/86400), math.floor((remaining%86400)/3600), math.floor((remaining%3600)/60)), color
 end
+local timerText, timerColor = getTimeRemaining()  -- still needed for initial build
 
-local timerText, timerColor = getTimeRemaining()
+-- Then hook into the validation result
+task.spawn(function()
+    -- wait until expiresAt gets set by ValidateKey
+    repeat task.wait(0.1) until getgenv().expiresAt ~= nil or getgenv()._keyDone
+
+    local label = au.UIElements.SideBarContainer:FindFirstChild("KeySystemTimer", true)
+    if label and getgenv().expiresAt then
+        local text, color = getTimeRemaining()
+        label.Text = "Time Left: " .. text
+        label.TextColor3 = color
+        label.Visible = true
+    end
+end)
+
+
 aB=al("TextButton",{
 Size=UDim2.new(0,
 (au.UIElements.SideBarContainer.AbsoluteSize.X)-(au.UIPadding/2),
@@ -10847,7 +10860,7 @@ Name="UserName"
 
 
 al("TextLabel",{
-Text="Time Left: " .. timerText,
+Text="Expires: " .. timerText,
 TextSize=15,
 TextTransparency=0.6,
 TextColor3 = timerColor,  -- ← dynamic color
