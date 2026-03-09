@@ -10746,10 +10746,14 @@ local function getTimeRemaining()
         min = tonumber(m),
         sec = 0
     }) - os.time()
-    if remaining <= 0 then 
+
+    if remaining > 315360000 then  -- more than 10 years = lifetime
+        return "Lifetime", Color3.fromRGB(0, 255, 0)
+    end
+
+    if remaining <= 0 then
         game:GetService("Players").LocalPlayer:Kick("Your key has expired. Please renew it.")
-        return "Expired", Color3.fromRGB(255, 50, 50) 
-    
+        return "Expired", Color3.fromRGB(255, 50, 50)
     end
 
     local green = Color3.fromRGB(0, 255, 0)
