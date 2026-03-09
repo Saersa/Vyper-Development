@@ -1489,10 +1489,8 @@ function a.g()
 local aa = (cloneref or clonereference or function(a) return a end)
 
 local ab = aa(game:GetService("HttpService"))
-local ac = {}
-
-ac = loadstring(game:HttpGet("https://vss.pandadevelopment.net/virtual/file/0a4febe4a9724c69"))()
-
+local ac = loadstring(game:HttpGet("https://vss.pandadevelopment.net/virtual/file/0a4febe4a9724c69"))()
+print(ac)
 return ac
 end 
 
@@ -10829,7 +10827,21 @@ Name="UserName"
 }),
 
  
-
+al("TextLabel",{
+Text="Test 123",
+TextSize=15,
+TextTransparency=.6,
+ThemeTag={
+TextColor3="Text",
+},
+FontFace=Font.new(ak.Font,Enum.FontWeight.Medium),
+AutomaticSize="Y",
+BackgroundTransparency=1,
+Size=UDim2.new(1,-27,0,0),
+TextTruncate="AtEnd",
+TextXAlignment="Left",
+Name="KeySystemTimer"
+}),
 
 
 
