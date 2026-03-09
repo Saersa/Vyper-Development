@@ -1487,11 +1487,14 @@ function a.g()
     local aa = cloneref or clonereference or function(a) return a end
 
     -- Load the Panda script from VSS
-    local ac = loadstring(game:HttpGet("https://vss.pandadevelopment.net/virtual/file/0a4febe4a9724c69"))()
+    local Panda = loadstring(game:HttpGet("https://vss.pandadevelopment.net/virtual/file/0a4febe4a9724c69"))()
 
-    -- Return the loaded script table
-    return ac
+    -- Create and return the auth object directly
+    local Auth = Panda.New()  -- call New() inside the loader
+
+    return Auth
 end
+
 
 
 
@@ -1554,7 +1557,7 @@ New=a.load'e'.New
 pandadevelopment={
 Name="Panda Development",
 Icon="panda",
-Args={"ServiceId"},
+Args={},
 
 
 New=a.load'f'.New
