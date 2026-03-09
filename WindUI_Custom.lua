@@ -1484,14 +1484,17 @@ return ab end function a.f()
 
 
 
-local aa=(cloneref or clonereference or function(aa)return aa end)
+function a.g()
 
-local ab=aa(game:GetService"HttpService")
-local ac={}
+local aa = (cloneref or clonereference or function(a) return a end)
 
-ac= loadstring(game:HttpGet("https://vss.pandadevelopment.net/virtual/file/0a4febe4a9724c69"))()
+local ab = aa(game:GetService("HttpService"))
+local ac = {}
 
-return ac end function a.g()
+ac = loadstring(game:HttpGet("https://vss.pandadevelopment.net/virtual/file/0a4febe4a9724c69"))()
+
+return ac
+end
 
 
 
