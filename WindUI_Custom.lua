@@ -10734,7 +10734,9 @@ end
 local function getTimeRemaining()
     if not getgenv().expiresAt then return "Never expires", Color3.fromRGB(255, 255, 255) end
     local mo,d,y,h,m = getgenv().expiresAt:match("(%d+)/(%d+)/(%d+)_(%d+):(%d+)")
-    if not mo then return "Never expires", Color3.fromRGB(255, 255, 255) end
+    if not mo then return "Lifetime", Color3.fromRGB(255, 255, 255) end
+
+    local yearNum = tonumber(y) 
     local fullYear = yearNum < 100 and yearNum + 2000 or yearNum
     local remaining = os.time({
         year = fullYear,
