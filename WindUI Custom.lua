@@ -1,17 +1,10 @@
 --[[
-     _      ___         ____  ______
-    | | /| / (_)__  ___/ / / / /  _/
-    | |/ |/ / / _ \/ _  / /_/ // /  
-    |__/|__/_/_//_/\_,_/\____/___/
+    WindUI Modified
+
+    v0.0.1  |  09-03-2026  |  Roblox UI Library for scripts
     
-    v1.6.63  |  2025-12-25  |  Roblox UI Library for scripts
-    
-    To view the source code, see the `src/` folder on the official GitHub repository.
     
     Author: Footagesus (Footages, .ftgs, oftgs)
-    Github: https://github.com/Footagesus/WindUI
-    Discord: https://discord.gg/ftgs-development-hub-1300692552005189632
-    
     Modified by: Vyper Development
     License: MIT
 ]]
@@ -1503,48 +1496,39 @@ local ae=gethwid or function()return aa(game:GetService"Players").LocalPlayer.Us
 local af,ag=request or http_request or syn_request,setclipboard or toclipboard
 
 function ValidateKey(ah)
-local ai="https://pandadevelopment.net/v2_validation?key="..tostring(ah).."&service="..tostring(ad).."&hwid="..tostring(ae())
+    local ai = "https://pandadevelopment.net/getkey/" .. tostring(ad) .. "?hwid=" .. tostring(ae())
 
+   local result = PandaV4Lite.validate(ah)
+ 
+    if result.success then
+        _print("[PandaAuth] - Validation successful!")
+        _print("[PandaAuth] - Premium: " .. _tostring(result.isPremium))
+        _print("[PandaAuth] - Expires: " .. (result.expiresAt or "Never"))
+    
+        -- Your script code goes here
+        print("Key Received and works!")
+    else
+        _print("[PandaAuth] - Validation failed: " .. (result.error or "Unknown error"))
+        -- Optionally kick the player or show error UI
+    end
 
-local aj,ak=pcall(function()
-return af{
-Url=ai,
-Method="GET",
-Headers={["User-Agent"]="Roblox/Exploit"}
-}
-end)
-
-if aj and ak then
-if ak.Success then
-local al,am=pcall(function()
-return ab:JSONDecode(ak.Body)
-end)
-
-if al and am then
-if am.V2_Authentication and am.V2_Authentication=="success"then
-
-return true,"Authenticated"
-else
-local an=am.Key_Information.Notes or"Unknown reason"
-
-return false,"Authentication failed: "..an
-end
-else
-
-return false,"JSON decode error"
-end
-else
-warn("[Pelinda Ov2.5] HTTP request was not successful. Code: "..tostring(ak.StatusCode).." Message: "..ak.StatusMessage)
-return false,"HTTP request failed: "..ak.StatusMessage
-end
-else
-
-return false,"Request pcall error"
-end
+    
 end
 
+-----
 function GetKeyLink()
-return"https://pandadevelopment.net/getkey?service="..tostring(ad).."&hwid="..tostring(ae())
+local result = PandaV4Lite.copyGetKeyUrl()
+ 
+if result.success then
+    _print("GetKey URL copied to clipboard!")
+    _print("URL: " .. result.url)
+    return result.url
+else
+    _print("Failed to get GetKey URL: " .. result.error)
+    return nil
+end
+
+
 end
 
 function CopyLink()
@@ -10889,6 +10873,21 @@ Size=UDim2.new(1,-27,0,0),
 TextTruncate="AtEnd",
 TextXAlignment="Left",
 Name="UserName"
+}),
+al("TextLabel",{
+Text="Test 123",
+TextSize=15,
+TextTransparency=.6,
+ThemeTag={
+TextColor3="Text",
+},
+FontFace=Font.new(ak.Font,Enum.FontWeight.Medium),
+AutomaticSize="Y",
+BackgroundTransparency=1,
+Size=UDim2.new(1,-27,0,0),
+TextTruncate="AtEnd",
+TextXAlignment="Left",
+Name="KeySystemTimer"
 }),
 al("UIListLayout",{
 Padding=UDim.new(0,4),
