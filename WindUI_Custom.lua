@@ -10829,21 +10829,7 @@ Name="UserName"
 }),
 
  
-al("TextLabel",{
-Text="Test 123",
-TextSize=15,
-TextTransparency=.6,
-ThemeTag={
-TextColor3="Text",
-},
-FontFace=Font.new(ak.Font,Enum.FontWeight.Medium),
-AutomaticSize="Y",
-BackgroundTransparency=1,
-Size=UDim2.new(1,-27,0,0),
-TextTruncate="AtEnd",
-TextXAlignment="Left",
-Name="KeySystemTimer"
-}),
+
 
 
 
