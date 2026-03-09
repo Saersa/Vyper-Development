@@ -10758,8 +10758,15 @@ local function getTimeRemaining()
         local t = 1 - (remaining / twelveHours)
         color = green:Lerp(red, t)
     end
+    local days = math.floor(remaining/86400)
+    local hours = math.floor((remaining%86400)/3600)
+    local mins = math.floor((remaining%3600)/60)
 
-    return string.format("%dd %dh %dm", math.floor(remaining/86400), math.floor((remaining%86400)/3600), math.floor((remaining%3600)/60)), color
+    if days > 0 then
+        return string.format("%dd %dh %dm", days, hours, mins), color
+    else
+        return string.format("%dh %dm", hours, mins), color
+    end
 end
 local timerText, timerColor = getTimeRemaining()  -- still needed for initial build
 
@@ -10870,7 +10877,7 @@ Name="UserName"
 
 al("TextLabel",{
 Text="Expires: " .. timerText,
-TextSize=15,
+TextSize=7,
 TextTransparency=0.6,
 TextColor3 = timerColor,  -- ← dynamic color
 FontFace=Font.new(ak.Font,Enum.FontWeight.Medium),
