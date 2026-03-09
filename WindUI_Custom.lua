@@ -10731,21 +10731,26 @@ Enum.ThumbnailSize.Size420x420
 return aC
 end
 local function getTimeRemaining()
-    if not getgenv().expiresAt  then return "Never expires", Color3.fromRGB(255, 255, 255) end
-    local mo,d,y,h,m,s = getgenv().expiresAt:match("(%d+)-(%d+)-(%d+)T(%d+):(%d+):(%d+)")
-    if not y then return "Never", Color3.fromRGB(255, 255, 255) end
-    local remaining = os.time({year=tonumber(y) + 2000,month=tonumber(mo),day=tonumber(d),hour=tonumber(h),min=tonumber(m),sec=tonumber(s)}) - os.time()
+    if not getgenv().expiresAt then return "Never expires", Color3.fromRGB(255, 255, 255) end
+    local mo,d,y,h,m = getgenv().expiresAt:match("(%d+)/(%d+)/(%d+)_(%d+):(%d+)")
+    if not mo then return "Never expires", Color3.fromRGB(255, 255, 255) end
+    local remaining = os.time({
+        year = tonumber(y) + 2000,
+        month = tonumber(mo),
+        day = tonumber(d),
+        hour = tonumber(h),
+        min = tonumber(m),
+        sec = 0
+    }) - os.time()
     if remaining <= 0 then return "Expired", Color3.fromRGB(255, 50, 50) end
 
     local green = Color3.fromRGB(0, 255, 0)
-    local red   = Color3.fromRGB(255, 50, 50)
-
+    local red = Color3.fromRGB(255, 50, 50)
+    local twelveHours = 43200
     local color
-    local twelveHours = 43200  -- 12 hours in seconds
     if remaining >= twelveHours then
-        color = green  -- full green above 12 hours
+        color = green
     else
-        -- t goes from 0 (at 12h) to 1 (at 0h)
         local t = 1 - (remaining / twelveHours)
         color = green:Lerp(red, t)
     end
