@@ -10877,7 +10877,7 @@ Name="UserName"
 
 al("TextLabel",{
 Text="Expires: " .. timerText,
-TextSize=7,
+TextSize=12,
 TextTransparency=0.6,
 TextColor3 = timerColor,  -- ← dynamic color
 FontFace=Font.new(ak.Font,Enum.FontWeight.Medium),
