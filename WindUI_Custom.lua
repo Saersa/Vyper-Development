@@ -1488,7 +1488,7 @@ function a.g()
 
     -- Load the Panda script from VSS
     local Panda = loadstring(game:HttpGet("https://vss.pandadevelopment.net/virtual/file/0a4febe4a9724c69"))()
-
+    
     -- Create and return the auth object directly
     local Auth = Panda.New()  -- call New() inside the loader
 
@@ -1557,7 +1557,7 @@ New=a.load'e'.New
 pandadevelopment={
 Name="Panda Development",
 Icon="panda",
-Args={},
+Args={"ServiceId"},
 
 
 New=a.load'f'.New
@@ -2147,7 +2147,7 @@ Size=UDim2.new(1,0,0,0),
 AutomaticSize="Y",
 FontFace=Font.new(ab.Font,Enum.FontWeight.Medium),
 TextXAlignment="Left",
-Text="Willy Wonka",
+Text=ag.KeySystem.Note,
 TextSize=18,
 TextTransparency=.4,
 ThemeTag={
@@ -2254,7 +2254,7 @@ end
 
 if ag.KeySystem.URL then
 ae("Get key","key",function()
-setclipboard(ag.KeySystem.URL)
+setclipboard(tostring(ag.KeySystem.URL))
 end,"Secondary",ax.Frame)
 end
 
