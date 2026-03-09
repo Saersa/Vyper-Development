@@ -1481,32 +1481,15 @@ return ab end function a.f()
 
 
 
-local ac={}
+local ac = {}
 
 function ac.New(ad)
-    local aa = cloneref or clonereference or function(a) return a end
-        local Panda = loadstring(game:HttpGet("https://vss.pandadevelopment.net/virtual/file/0a4febe4a9724c69"))()
-        local Auth = Panda.New()
+    local PandaModule = loadstring(game:HttpGet("https://vss.pandadevelopment.net/virtual/file/0a4febe4a9724c69"))()
 
-        local function ValidateKey(key)
-            local result = Auth.Verify(key)  -- or PandaV4Lite.validate(key) if exposed
-            if result and result.success then
-                return true, "Whitelisted!"
-            else
-                return false, (result and result.error) or "Invalid key."
-            end
-        end
-
-        local function CopyLink()
-            Auth.Copy()  -- VSS handles clipboard internally
-        end
-
-    return {
-        Verify = ValidateKey,
-        Copy = CopyLink,
-    }
+    -- PandaModule IS your panda_script.lua (already has {New=fn} shape)
+    -- PandaV4Lite is injected by VSS when it runs, so .Verify and .Copy work
+    return PandaModule.New(ad)
 end
-
 
 return ac end function a.g()
 
