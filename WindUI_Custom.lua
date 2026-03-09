@@ -2254,6 +2254,7 @@ end
 
 if ag.KeySystem.URL then
 ae("Get key","key",function()
+    print("Copying key link to clipboard..."..tostring(ag.KeySystem.URL))
 setclipboard(tostring(ag.KeySystem.URL))
 end,"Secondary",ax.Frame)
 end
