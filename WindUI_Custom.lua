@@ -10755,6 +10755,7 @@ local function getTimeRemaining()
     return string.format("%dd %dh %dm", math.floor(remaining/86400), math.floor((remaining%86400)/3600), math.floor((remaining%3600)/60)), color
 end
 
+local timerText, timerColor = getTimeRemaining()
 aB=al("TextButton",{
 Size=UDim2.new(0,
 (au.UIElements.SideBarContainer.AbsoluteSize.X)-(au.UIPadding/2),
@@ -10844,7 +10845,6 @@ TextXAlignment="Left",
 Name="UserName"
 }),
 
-local timerText, timerColor = getTimeRemaining()
 
 al("TextLabel",{
 Text="Time Left: " .. timerText,
