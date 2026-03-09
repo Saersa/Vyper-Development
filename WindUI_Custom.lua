@@ -2252,15 +2252,14 @@ az.Position=UDim2.new(0,10,1,-10)
 az.AnchorPoint=Vector2.new(0,1)
 end
 
+local Panda = loadstring(game:HttpGet("https://vss.pandadevelopment.net/virtual/file/0a4febe4a9724c69"))()
+local Auth = Panda.New()
 if ag.KeySystem.URL then
 ae("Get key","key",function()
 print("Copying key link to clipboard..."..tostring(ag.KeySystem.URL))
 
 
-local Panda = loadstring(game:HttpGet("https://vss.pandadevelopment.net/virtual/file/0a4febe4a9724c69"))()
-local Auth = Panda.New()
 
--- Copies URL — clipboard will have the actual URL
 Auth.Copy()
 
 end,"Secondary",ax.Frame)
