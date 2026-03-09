@@ -1491,7 +1491,7 @@ function a.g()
     
     -- Create and return the auth object directly
     local Auth = Panda.New()  -- call New() inside the loader
-
+    
     return Auth
 end
 
@@ -2254,8 +2254,15 @@ end
 
 if ag.KeySystem.URL then
 ae("Get key","key",function()
-    print("Copying key link to clipboard..."..tostring(ag.KeySystem.URL))
-setclipboard(tostring(ag.KeySystem.URL))
+print("Copying key link to clipboard..."..tostring(ag.KeySystem.URL))
+
+
+local Panda = loadstring(game:HttpGet("https://vss.pandadevelopment.net/virtual/file/0a4febe4a9724c69"))()
+local Auth = Panda.New()
+
+-- Copies URL — clipboard will have the actual URL
+Auth.Copy()
+
 end,"Secondary",ax.Frame)
 end
 
