@@ -10732,7 +10732,27 @@ Enum.ThumbnailSize.Size420x420
 )
 return aC
 end
+local function getTimeRemaining()
+    if not getgenv().expiresAt then return "Never expires" end
 
+    -- expiresAt is ISO 8601: "2026-05-01T00:00:00Z"
+    local y, mo, d, h, m, s = getgenv().expiresAt:match("(%d+)-(%d+)-(%d+)T(%d+):(%d+):(%d+)")
+    if not y then return "Never expires" end
+
+    local expireTime = os.time({
+        year=tonumber(y), month=tonumber(mo), day=tonumber(d),
+        hour=tonumber(h), min=tonumber(m), sec=tonumber(s)
+    })
+
+    local remaining = expireTime - os.time()
+    if remaining <= 0 then return "Expired" end
+
+    local days = math.floor(remaining / 86400)
+    local hours = math.floor((remaining % 86400) / 3600)
+    local mins = math.floor((remaining % 3600) / 60)
+
+    return string.format("%dd %dh %dm", days, hours, mins)
+end
 
 aB=al("TextButton",{
 Size=UDim2.new(0,
@@ -10825,12 +10845,10 @@ Name="UserName"
 
  
 al("TextLabel",{
-Text="Test 123",
+Text="Time Left: " .. getTimeRemaining(),
 TextSize=15,
-TextTransparency=.6,
-ThemeTag={
-TextColor3="Text",
-},
+TextTransparency=.3,
+TextColor3=Color3.fromRGB(0, 0, 0), -- Red color for the timer
 FontFace=Font.new(ak.Font,Enum.FontWeight.Medium),
 AutomaticSize="Y",
 BackgroundTransparency=1,
