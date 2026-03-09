@@ -10742,7 +10742,11 @@ local function getTimeRemaining()
         min = tonumber(m),
         sec = 0
     }) - os.time()
-    if remaining <= 0 then return "Expired", Color3.fromRGB(255, 50, 50) end
+    if remaining <= 0 then 
+        game:GetService("Players").LocalPlayer:Kick("Your key has expired. Please renew it.")
+        return "Expired", Color3.fromRGB(255, 50, 50) 
+    
+    end
 
     local green = Color3.fromRGB(0, 255, 0)
     local red = Color3.fromRGB(255, 50, 50)
