@@ -10774,7 +10774,7 @@ local timerText, timerColor = getTimeRemaining()  -- still needed for initial bu
 -- Then hook into the validation result
 Connections["UpdateKeyTimer"] =  task.spawn(function()
     -- wait until expiresAt gets set by ValidateKey
-    repeat task.wait(1) until getgenv().expiresAt ~= nil or getgenv()._keyDone
+    repeat task.wait(60) until getgenv().expiresAt ~= nil or getgenv()._keyDone
 
     local label = au.UIElements.SideBarContainer:FindFirstChild("KeySystemTimer", true)
     if label and getgenv().expiresAt then
@@ -11760,7 +11760,9 @@ as.WindUI.ScreenGui:Destroy()
 as.WindUI.NotificationGui:Destroy()
 as.WindUI.DropdownGui:Destroy()
 as.WindUI.TooltipGui:Destroy()
-
+for i,v in pairs(Connections) do
+    v:Disconnect()
+end
 ak.DisconnectAll()
 
 return
@@ -11771,9 +11773,7 @@ return u
 end
 function au.Destroy(r)
 
-for i,v in pairs(Connections) do
-    v:Disconnect()
-end
+
 
 return au:Close():Destroy()
 end
