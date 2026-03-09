@@ -1486,13 +1486,30 @@ return ab end function a.f()
 function a.g()
     local aa = cloneref or clonereference or function(a) return a end
 
-    -- Load the Panda script from VSS
-    local Panda = loadstring(game:HttpGet("https://vss.pandadevelopment.net/virtual/file/0a4febe4a9724c69"))()
-    
-    -- Create and return the auth object directly
-    local Auth = Panda.New()  -- call New() inside the loader
-    
-    return Auth
+    local function New(ServiceId)
+        local Panda = loadstring(game:HttpGet("https://vss.pandadevelopment.net/virtual/file/0a4febe4a9724c69"))()
+        local Auth = Panda.New()
+
+        local function ValidateKey(key)
+            local result = Auth.Verify(key)  -- or PandaV4Lite.validate(key) if exposed
+            if result and result.success then
+                return true, "Whitelisted!"
+            else
+                return false, (result and result.error) or "Invalid key."
+            end
+        end
+
+        local function CopyLink()
+            Auth.Copy()  -- VSS handles clipboard internally
+        end
+
+        return {
+            Verify = ValidateKey,
+            Copy = CopyLink,
+        }
+    end
+
+    return { New = New }  -- return a MODULE, not an instance
 end
 
 
@@ -2252,16 +2269,10 @@ az.Position=UDim2.new(0,10,1,-10)
 az.AnchorPoint=Vector2.new(0,1)
 end
 
-local Panda = loadstring(game:HttpGet("https://vss.pandadevelopment.net/virtual/file/0a4febe4a9724c69"))()
-local Auth = Panda.New()
 if ag.KeySystem.URL then
 ae("Get key","key",function()
 print("Copying key link to clipboard..."..tostring(ag.KeySystem.URL))
-
-
-
-Auth.Copy()
-
+setclipboard(tostring(ag.KeySystem.URL))
 end,"Secondary",ax.Frame)
 end
 
