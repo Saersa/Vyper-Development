@@ -11766,9 +11766,17 @@ as.WindUI.ScreenGui:Destroy()
 as.WindUI.NotificationGui:Destroy()
 as.WindUI.DropdownGui:Destroy()
 as.WindUI.TooltipGui:Destroy()
-for i,v in pairs(Connections) do
-    v:Disconnect()
+
+
+for i, v in pairs(Connections) do
+    if type(v) == "thread" then
+        task.cancel(v)   -- threads use task.cancel
+    else
+        v:Disconnect()   -- connections use :Disconnect()
+    end
 end
+
+
 ak.DisconnectAll()
 
 return
