@@ -10646,7 +10646,7 @@ Visible=true,
 },{
 al("Frame",{
 Name="Content",
-BackgroundTransparency=1,
+BackgroundTransparency=0.6,
 Size=UDim2.new(
 1,
 0,
