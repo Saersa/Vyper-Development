@@ -10668,7 +10668,7 @@ au.UIElements.MainBar=al("Frame",{
 Size=UDim2.new(1,-au.UIElements.SideBarContainer.AbsoluteSize.X,1,-au.Topbar.Height),
 Position=UDim2.new(1,0,1,0),
 AnchorPoint=Vector2.new(1,1),
-BackgroundTransparency=0.8,
+BackgroundTransparency=1,
 },{
 ak.NewRoundFrame(au.UICorner-(au.UIPadding/2),"Squircle",{
 Size=UDim2.new(1,0,1,0),
@@ -10865,6 +10865,8 @@ TextTruncate="AtEnd",
 TextXAlignment="Left",
 Name="DisplayName"
 }),
+
+
 al("TextLabel",{
 Text=au.User.Anonymous and"@Anonymous" or  "@"..af.LocalPlayer.Name or "@".. game:GetService("Players").LocalPlayer.Name,
 TextSize=15,
