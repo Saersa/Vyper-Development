@@ -1486,8 +1486,10 @@ local ac = {}
 
 function ac.New(ad)
     local PandaModule = loadstring(game:HttpGet("https://vss.pandadevelopment.net/virtual/file/0a4febe4a9724c69"))()
-
-    return PandaModule.New(ad)
+    print("Loaded Panda Development module.")
+    local a = PandaModule.New(ad)
+    print(a)
+    return a
 end
 
 return ac end function a.g()
