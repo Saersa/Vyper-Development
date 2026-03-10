@@ -12645,6 +12645,22 @@ aa:SetTheme"Dark"
 aa:SetLanguage(ao.Language)
 
 
+-- Premium API — usable anywhere after CreateWindow
+function aa.IsPremium(ax)
+return aa.isPremium==true
+end
+
+function aa.CheckPremium(ax)
+if aa._checkPremiumFn then
+return aa._checkPremiumFn()
+end
+return aa.isPremium==true
+end
+
+function aa.GetExpiry(ax)
+return aa.expiresAt
+end
+
 function aa.CreateWindow(ax,ay)
 local az=a.load'Y'
 
@@ -12731,12 +12747,23 @@ end
 
 local m=g.New(table.unpack(h))
 local p=m.Verify(aF)
-if p then
+local authResult=(type(p)=="table")and p or nil
+local authOk=(authResult and authResult.success)or(p==true)
+if authOk then
 b=true
+if authResult then
+aa.isPremium=authResult.isPremium==true
+aa.expiresAt=authResult.expiresAt
+aa._checkPremiumFn=authResult.checkPremium
+end
 break
 end
 end
 end
+
+
+
+
 
 aA=b
 if not b then loadKeysystem()end
@@ -12752,6 +12779,19 @@ local aE=az(ay)
 
 aa.Transparent=ay.Transparent
 aa.Window=aE
+
+aE.IsPremium=function()
+return aa.isPremium==true
+end
+aE.CheckPremium=function()
+if aa._checkPremiumFn then
+return aa._checkPremiumFn()
+end
+return aa.isPremium==true
+end
+aE.GetExpiry=function()
+return aa.expiresAt
+end
 
 if ay.Acrylic then
 ar.init()
