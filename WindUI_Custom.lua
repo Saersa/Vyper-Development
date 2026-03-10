@@ -10840,7 +10840,6 @@ Size=UDim2.new(0,42,0,42),
 ThemeTag={
 BackgroundColor3="Text",
 },
-BackgroundTransparency=.93,
 },{
 al("UICorner",{
 CornerRadius=UDim.new(1,0)
