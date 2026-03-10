@@ -11769,11 +11769,7 @@ as.WindUI.TooltipGui:Destroy()
 
 
 for i, v in pairs(Connections) do
-    if type(v) == "thread" then
-        task.cancel(v)   -- threads use task.cancel
-    else
-        v:Disconnect()   -- connections use :Disconnect()
-    end
+    task.cancel(v)   -- threads use task.cancel
 end
 
 
