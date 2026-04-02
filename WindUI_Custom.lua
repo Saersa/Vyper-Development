@@ -8527,10 +8527,11 @@ TextSize=ak.TextSize or 19,
 DescTextSize=ak.DescTextSize or 16,
 Box=ak.Box or false,
 BoxBorder=ak.BoxBorder or false,
-FontWeight=ak.FontWeight or Enum.FontWeight.SemiBold,
-TextTransparency=ak.TextTransparency or 0.05,
-DescTextTransparency=ak.DescTextTransparency or 0.4,
-Opened=ak.Opened or false,
+	Locked=ak.Locked or false,
+	FontWeight=ak.FontWeight or Enum.FontWeight.SemiBold,
+	TextTransparency=ak.Locked and 0.6 or (ak.TextTransparency or 0.05),
+	DescTextTransparency=ak.Locked and 0.8 or (ak.DescTextTransparency or 0.4),
+	Opened=ak.Opened or false,
 UIElements={},
 
 HeaderSize=42,
@@ -8667,6 +8668,7 @@ BackgroundTransparency=1,
 AutomaticSize=Expandable and nil or"Y",
 Text="",
 Name="Top",
+Interactable=not al.Locked,
 },{
 al.Box and ae("UIPadding",{
 PaddingLeft=UDim.new(0,ak.Window.ElementConfig.UIPadding+(ak.Window.NewElements and 4 or 0)),
@@ -9156,9 +9158,12 @@ Icon=an.Icon,
 IconColor=an.IconColor,
 IconShape=an.IconShape,
 IconThemed=an.IconThemed,
-Locked=an.Locked,
-ShowTabTitle=an.ShowTabTitle,
-Selected=false,
+	Locked=an.Locked,
+	ShowTabTitle=an.ShowTabTitle,
+	TabTitleAlignment=an.TabTitleAlignment or"Left",
+	IconOnly=an.IconOnly or false,
+	Outline=an.Outline or false,
+	Selected=false,
 Index=nil,
 Parent=an.Parent,
 UIElements={},
@@ -9193,15 +9198,16 @@ ThemeTag={
 ImageColor3="TabBackground",
 },
 ImageTransparency=1,
-},{
-af.NewRoundFrame(ap.UICorner,"Glass-1",{
-Size=UDim2.new(1,0,1,0),
-ThemeTag={
-ImageColor3="Text",
-},
-ImageTransparency=1,
-Name="Outline"
-},{
+	},{
+	af.NewRoundFrame(ap.UICorner,ap.Outline and"SquircleOutline"or"Glass-1",{
+	Size=UDim2.new(1,0,1,0),
+	ThemeTag={
+	ImageColor3="Text",
+	},
+	ImageTransparency=ap.Outline and 0.85 or 1,
+	Name="Outline"
+	},{
+
 
 
 
@@ -9238,14 +9244,15 @@ TextColor3="TabTitle"
 },
 TextTransparency=not ap.Locked and 0.4 or.7,
 TextSize=15,
-Size=UDim2.new(1,0,0,0),
-FontFace=Font.new(af.Font,Enum.FontWeight.Medium),
-TextWrapped=true,
-RichText=true,
-AutomaticSize="Y",
-LayoutOrder=2,
-TextXAlignment="Left",
-BackgroundTransparency=1,
+	Size=UDim2.new(1,0,0,0),
+	FontFace=Font.new(af.Font,Enum.FontWeight.Medium),
+	TextWrapped=true,
+	RichText=true,
+	AutomaticSize="Y",
+	LayoutOrder=2,
+	TextXAlignment="Left",
+	BackgroundTransparency=1,
+	Visible=not ap.IconOnly,
 },{
 ah("UIPadding",{
 PaddingTop=UDim.new(0,ap.TitlePaddingY),
@@ -9404,8 +9411,8 @@ FontFace=Font.new(af.Font,Enum.FontWeight.SemiBold),
 TextTruncate="AtEnd",
 RichText=true,
 LayoutOrder=2,
-TextXAlignment="Left",
-BackgroundTransparency=1,
+	TextXAlignment=ap.TabTitleAlignment,
+	BackgroundTransparency=1,
 }),
 ah("UIPadding",{
 PaddingTop=UDim.new(0,20),
@@ -9414,10 +9421,12 @@ PaddingRight=UDim.new(0,20),
 PaddingBottom=UDim.new(0,20),
 }),
 ah("UIListLayout",{
-SortOrder="LayoutOrder",
-Padding=UDim.new(0,10),
-FillDirection="Horizontal",
-VerticalAlignment="Center",
+
+	SortOrder="LayoutOrder",
+	Padding=UDim.new(0,2+(Window.UIPadding/2)),
+	FillDirection="Horizontal",
+	VerticalAlignment="Center",
+	HorizontalAlignment=ap.IconOnly and"Center"or"Left",
 })
 }),
 ah("Frame",{
@@ -12663,144 +12672,142 @@ return aa.expiresAt
 end
 
 function aa.CreateWindow(ax,ay)
-local az=a.load'Y'
+    local az=a.load'Y'
 
-if not isfolder"Vyper"then
-makefolder"Vyper"
-end
-if ay.Folder then
-makefolder(ay.Folder)
-else
-makefolder(ay.Title)
-end
+    if not isfolder"Vyper"then
+    makefolder"Vyper"
+    end
+    
+    if ay.Folder then
+        makefolder(ay.Folder)
+    
+    else
+        makefolder(ay.Title)
+        end
 
-ay.WindUI=aa
-ay.Parent=aa.ScreenGui.Window
+    ay.WindUI=aa
+    ay.Parent=aa.ScreenGui.Window
 
-if aa.Window then
-warn"You cannot create more than one window"
-return
-end
+    if aa.Window then
+        warn"You cannot create more than one window"
+        return
+    end
 
-local aA=true
+    local aA=true
 
-local aB=aa.Themes[ay.Theme or"Dark"]
-
-
-ao.SetTheme(aB)
-
-
-local aC=gethwid or function()
-return ah.LocalPlayer.UserId
-end
-
-local aD=aC()
-
-if ay.KeySystem then
-aA=false
-
-local function loadKeysystem()
-am.new(ay,aD,function(aE)aA=aE end)
-end
-
-local aE=(ay.Folder or"Temp").."/"..aD..".key"
-
-if ay.KeySystem.KeyValidator then
-if ay.KeySystem.SaveKey and isfile(aE)then
-local aF=readfile(aE)
-local b=ay.KeySystem.KeyValidator(aF)
-
-if b then
-aA=true
-else
-loadKeysystem()
-end
-else
-loadKeysystem()
-end
-elseif not ay.KeySystem.API then
-if ay.KeySystem.SaveKey and isfile(aE)then
-local aF=readfile(aE)
-local b=(type(ay.KeySystem.Key)=="table")
-and table.find(ay.KeySystem.Key,aF)
-or tostring(ay.KeySystem.Key)==tostring(aF)
-
-if b then
-aA=true
-else
-loadKeysystem()
-end
-else
-loadKeysystem()
-end
-else
-if isfile(aE)then
-local aF=readfile(aE)
-local b=false
-
-for d,f in next,ay.KeySystem.API do
-local g=aa.Services[f.Type]
-if g then
-local h={}
-for j,l in next,g.Args do
-table.insert(h,f[l])
-end
-
-local m=g.New(table.unpack(h))
-local p=m.Verify(aF)
-local authResult=(type(p)=="table")and p or nil
-local authOk=(authResult and authResult.success)or(p==true)
-if authOk then
-b=true
-if authResult then
-aa.isPremium=authResult.isPremium==true
-aa.expiresAt=authResult.expiresAt
-aa._checkPremiumFn=authResult.checkPremium
-end
-break
-end
-end
-end
+    local aB=aa.Themes[ay.Theme or"Dark"]
 
 
+    ao.SetTheme(aB)
 
 
+    local aC=gethwid or function()
+        return ah.LocalPlayer.UserId
+    end
 
-aA=b
-if not b then loadKeysystem()end
-else
-loadKeysystem()
-end
-end
+    local aD=aC()
 
-repeat task.wait()until aA
-end
+    if ay.KeySystem then
+        aA=false
 
-local aE=az(ay)
+        local function loadKeysystem()
+        am.new(ay,aD,function(aE)aA=aE end)
+    end
 
-aa.Transparent=ay.Transparent
-aa.Window=aE
+    local aE=(ay.Folder or"Temp").."/"..aD..".key"
 
-aE.IsPremium=function()
-return aa.isPremium==true
-end
-aE.CheckPremium=function()
-if aa._checkPremiumFn then
-return aa._checkPremiumFn()
-end
-return aa.isPremium==true
-end
-aE.GetExpiry=function()
-return aa.expiresAt
-end
+    if ay.KeySystem.KeyValidator then
+    if ay.KeySystem.SaveKey and isfile(aE)then
+    local aF=readfile(aE)
+    local b=ay.KeySystem.KeyValidator(aF)
 
-if ay.Acrylic then
-ar.init()
-end
+    if b then
+    aA=true
+    else
+    loadKeysystem()
+    end
+    else
+    loadKeysystem()
+    end
+    elseif not ay.KeySystem.API then
+    if ay.KeySystem.SaveKey and isfile(aE)then
+    local aF=readfile(aE)
+    local b=(type(ay.KeySystem.Key)=="table")
+    and table.find(ay.KeySystem.Key,aF)
+    or tostring(ay.KeySystem.Key)==tostring(aF)
+
+    if b then
+    aA=true
+    else
+    loadKeysystem()
+    end
+    else
+    loadKeysystem()
+    end
+    else
+    if isfile(aE)then
+    local aF=readfile(aE)
+    local b=false
+
+    for d,f in next,ay.KeySystem.API do
+    local g=aa.Services[f.Type]
+    if g then
+    local h={}
+    for j,l in next,g.Args do
+    table.insert(h,f[l])
+    end
+
+    local m=g.New(table.unpack(h))
+    local p=m.Verify(aF)
+    local authResult=(type(p)=="table")and p or nil
+    local authOk=(authResult and authResult.success)or(p==true)
+    if authOk then
+    b=true
+    if authResult then
+    aa.isPremium=authResult.isPremium==true
+    aa.expiresAt=authResult.expiresAt
+    aa._checkPremiumFn=authResult.checkPremium
+    end
+    break
+    end
+    end
+    end
 
 
 
 
+
+    aA=b
+    if not b then loadKeysystem()end
+    else
+    loadKeysystem()
+    end
+    end
+
+    repeat task.wait()until aA
+    end
+
+    local aE=az(ay)
+
+    aa.Transparent=ay.Transparent
+    aa.Window=aE
+
+    aE.IsPremium=function()
+    return aa.isPremium==true
+    end
+    aE.CheckPremium=function()
+    if aa._checkPremiumFn then
+    return aa._checkPremiumFn()
+    end
+    return aa.isPremium==true
+    end
+    aE.GetExpiry=function()
+    return aa.expiresAt
+    end
+
+    if ay.Acrylic then
+    ar.init()
+    end
 
 
 
@@ -12810,7 +12817,11 @@ end
 
 
 
-return aE
+
+
+
+
+    return aE
 end
 
 return aa
