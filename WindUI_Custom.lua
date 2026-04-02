@@ -8527,11 +8527,10 @@ TextSize=ak.TextSize or 19,
 DescTextSize=ak.DescTextSize or 16,
 Box=ak.Box or false,
 BoxBorder=ak.BoxBorder or false,
-	Locked=ak.Locked or false,
-	FontWeight=ak.FontWeight or Enum.FontWeight.SemiBold,
-	TextTransparency=ak.Locked and 0.6 or (ak.TextTransparency or 0.05),
-	DescTextTransparency=ak.Locked and 0.8 or (ak.DescTextTransparency or 0.4),
-	Opened=ak.Opened or false,
+FontWeight=ak.FontWeight or Enum.FontWeight.SemiBold,
+TextTransparency=ak.TextTransparency or 0.05,
+DescTextTransparency=ak.DescTextTransparency or 0.4,
+Opened=ak.Opened or false,
 UIElements={},
 
 HeaderSize=42,
@@ -8668,7 +8667,6 @@ BackgroundTransparency=1,
 AutomaticSize=Expandable and nil or"Y",
 Text="",
 Name="Top",
-Interactable=not al.Locked,
 },{
 al.Box and ae("UIPadding",{
 PaddingLeft=UDim.new(0,ak.Window.ElementConfig.UIPadding+(ak.Window.NewElements and 4 or 0)),
@@ -9158,12 +9156,9 @@ Icon=an.Icon,
 IconColor=an.IconColor,
 IconShape=an.IconShape,
 IconThemed=an.IconThemed,
-	Locked=an.Locked,
-	ShowTabTitle=an.ShowTabTitle,
-	TabTitleAlignment=an.TabTitleAlignment or"Left",
-	IconOnly=an.IconOnly or false,
-	Outline=an.Outline or false,
-	Selected=false,
+Locked=an.Locked,
+ShowTabTitle=an.ShowTabTitle,
+Selected=false,
 Index=nil,
 Parent=an.Parent,
 UIElements={},
@@ -9198,16 +9193,15 @@ ThemeTag={
 ImageColor3="TabBackground",
 },
 ImageTransparency=1,
-	},{
-	af.NewRoundFrame(ap.UICorner,ap.Outline and"SquircleOutline"or"Glass-1",{
-	Size=UDim2.new(1,0,1,0),
-	ThemeTag={
-	ImageColor3="Text",
-	},
-	ImageTransparency=ap.Outline and 0.85 or 1,
-	Name="Outline"
-	},{
-
+},{
+af.NewRoundFrame(ap.UICorner,"Glass-1",{
+Size=UDim2.new(1,0,1,0),
+ThemeTag={
+ImageColor3="Text",
+},
+ImageTransparency=1,
+Name="Outline"
+},{
 
 
 
@@ -9244,15 +9238,14 @@ TextColor3="TabTitle"
 },
 TextTransparency=not ap.Locked and 0.4 or.7,
 TextSize=15,
-	Size=UDim2.new(1,0,0,0),
-	FontFace=Font.new(af.Font,Enum.FontWeight.Medium),
-	TextWrapped=true,
-	RichText=true,
-	AutomaticSize="Y",
-	LayoutOrder=2,
-	TextXAlignment="Left",
-	BackgroundTransparency=1,
-	Visible=not ap.IconOnly,
+Size=UDim2.new(1,0,0,0),
+FontFace=Font.new(af.Font,Enum.FontWeight.Medium),
+TextWrapped=true,
+RichText=true,
+AutomaticSize="Y",
+LayoutOrder=2,
+TextXAlignment="Left",
+BackgroundTransparency=1,
 },{
 ah("UIPadding",{
 PaddingTop=UDim.new(0,ap.TitlePaddingY),
@@ -9411,8 +9404,8 @@ FontFace=Font.new(af.Font,Enum.FontWeight.SemiBold),
 TextTruncate="AtEnd",
 RichText=true,
 LayoutOrder=2,
-	TextXAlignment=ap.TabTitleAlignment,
-	BackgroundTransparency=1,
+TextXAlignment="Left",
+BackgroundTransparency=1,
 }),
 ah("UIPadding",{
 PaddingTop=UDim.new(0,20),
@@ -9421,12 +9414,10 @@ PaddingRight=UDim.new(0,20),
 PaddingBottom=UDim.new(0,20),
 }),
 ah("UIListLayout",{
-
-	SortOrder="LayoutOrder",
-	Padding=UDim.new(0,2+(Window.UIPadding/2)),
-	FillDirection="Horizontal",
-	VerticalAlignment="Center",
-	HorizontalAlignment=ap.IconOnly and"Center"or"Left",
+SortOrder="LayoutOrder",
+Padding=UDim.new(0,10),
+FillDirection="Horizontal",
+VerticalAlignment="Center",
 })
 }),
 ah("Frame",{
