@@ -1526,12 +1526,10 @@ function JnkieModule.New(Service,Identifier,Provider)
         if isValid then
             print("[Vyper] - Validation successful!")
 
-            -- 2. Safe JD handling (avoid nil crashes)
-            local reason = JD_REASON or result.message or "UNKNOWN"
-            local isPremium = JD_IS_PREMIUM or false
-            local expires = (JD_EXPIRES_AT - os.time()) or 0
 
-
+            local reason = result.reason or result.message or "UNKNOWN"
+            local isPremium = result.isPremium or false
+            local expires = result.expiresAt and (result.expiresAt - os.time()) or 0
 
             if reason == "KEYLESS" then
                 print("[Vyper] - Mode: Keyless")
