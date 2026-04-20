@@ -1492,108 +1492,7 @@ function a.f()
     return ac 
 end 
 
-function a.g()
 
-
-local JnkieModule = {}
-
-
-function JnkieModule.New(Service,Identifier,Provider)
-    local Junkie = loadstring(game:HttpGet("https://jnkie.com/sdk/library.lua"))()
-
-    -- Dashboard config
-    Junkie.service = Service
-    Junkie.identifier = Identifier
-    Junkie.provider = Provider
-
-
-    local function ValidateKey(key)
-
-        -- 1. Validate key
-        local result = Junkie.check_key(key)
-
-        -- 🔒 safety check (prevents nil crashes)
-        if not result then
-            getgenv()._keyDone = true
-            print("[Vyper] - Validation failed: SDK returned nil")
-            return false, "SDK error"
-        end
-
-        local isValid = (result.valid)
-        for i,v in pairs(result) do
-            print(i,v)
-        end
-        if isValid then
-            print("[Vyper] - Validation successful!")
-
-            print(JD_EXPIRES_AT)
-            local reason = result.reason or result.message or "UNKNOWN"
-            local isPremium = result.is_premium or false
-            local expires = result.expires_at and (result.expires_at - os.time())
-            repeat 
-                task.wait() 
-            until expires ~= nil or expires ~= 0
-
-            if reason == "KEYLESS" then
-                print("[Vyper] - Mode: Keyless")
-
-            elseif reason == "KEY_VALID" or reason == "Key validation" then
-                print("[Vyper] - Premium: " .. tostring(isPremium))
-                print("[Vyper] - Expires: " .. tostring(expires))
-            end
-
-            -- 3. global storage
-            getgenv().expiresAt = expires or os.time()
-            getgenv()._keyDone = true
-
-            -- 4. return structured result
-            return {
-                success = true,
-                message = "Authenticated",
-                reason = reason,
-                isPremium = isPremium,
-                expiresAt = expires,
-                discordId = JD_DISCORD_ID,
-                discordUsername = JD_DISCORD_USERNAME,
-                createdAt = JD_CREATED_AT,
-
-                checkPremium = function()
-                    return isPremium
-                end,
-            }
-
-        else
-            getgenv()._keyDone = true
-
-            local err = result.error or result.message or "Unknown error"
-            print("[Vyper] - Validation failed: " .. tostring(err))
-
-            return false, err
-        end
-    end
-
-    local function CopyLink()
-        local link = Junkie.get_key_link()
-
-        if link then
-            if setclipboard then
-                setclipboard(link)
-            end
-            print("[Vyper] - GetKey URL copied to clipboard!")
-            return true
-        else
-            print("[Vyper] - Failed to copy GetKey URL")
-            return false
-        end
-    end
-
-    return {
-        Verify = ValidateKey,
-        Copy = CopyLink
-    }
-end
-
-return JnkieModule end 
 
 function a.ii()
 
@@ -1654,13 +1553,6 @@ return {
         Icon = "panda",
         Args = {"ServiceId"},
         New = a.load'f'.New
-    },
-
-    junkiedevelopment = {
-        Name = "Jnkie",
-        Icon = "hamburger",
-        Args = {"Service","Identifier","Provider"},
-        New = a.load'g'.New
     },
 
     luarmor = {
