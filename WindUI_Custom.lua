@@ -1545,7 +1545,7 @@ function JnkieModule.New(Service,Identifier,Provider)
             end
 
             -- 3. global storage
-            getgenv().expiresAt = expires
+            getgenv().expiresAt = expires or 0
             getgenv()._keyDone = true
 
             -- 4. return structured result
