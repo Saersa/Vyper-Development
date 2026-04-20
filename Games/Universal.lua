@@ -1,9 +1,9 @@
 local WindUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/Saersa/Vyper-Development/refs/heads/main/WindUI_Custom.lua"))()
 local Window = WindUI:CreateWindow({
-    Title = "My Super Hub",
+    Title = "Vyper Developments",
     Icon = "door-open", -- lucide icon
     Author = "by .ftgs and .ftgs",
-    Folder = "MySuperHub",
+    Folder = "Vyper",
     
 
     NewElements = true,
