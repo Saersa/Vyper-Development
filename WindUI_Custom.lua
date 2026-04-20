@@ -1526,15 +1526,13 @@ function JnkieModule.New(Service,Identifier,Provider)
         if isValid then
             print("[Vyper] - Validation successful!")
 
-
+            print(JD_EXPIRES_AT)
             local reason = result.reason or result.message or "UNKNOWN"
             local isPremium = result.is_premium or false
-            local expires = result.expires_at and (result.expires_at - os.time()) or 0
-            print("[Vyper] - Expires: " .. tostring(expires))
+            local expires = result.expires_at and (result.expires_at - os.time())
             repeat 
                 task.wait() 
-            until expires ~= nil
-            print("[Vyper] - Expires: " .. tostring(expires))
+            until expires ~= nil or expires ~= 0
 
             if reason == "KEYLESS" then
                 print("[Vyper] - Mode: Keyless")
@@ -1545,7 +1543,7 @@ function JnkieModule.New(Service,Identifier,Provider)
             end
 
             -- 3. global storage
-            getgenv().expiresAt = expires or 0
+            getgenv().expiresAt = expires or os.time()
             getgenv()._keyDone = true
 
             -- 4. return structured result
@@ -10841,40 +10839,26 @@ Enum.ThumbnailSize.Size420x420
 )
 return aC
 end
+
 local function getTimeRemaining()
-    if not getgenv().expiresAt then return "Never expires", Color3.fromRGB(255, 255, 255) end
-    local mo,d,y,h,m = getgenv().expiresAt:match("(%d+)/(%d+)/(%d+)_(%d+):(%d+)")
-    if not mo then return "Lifetime", Color3.fromRGB(255, 255, 255) end
+    local remaining = getgenv().expiresAt
 
-    local yearNum = tonumber(y) 
-    local fullYear = yearNum < 100 and yearNum + 2000 or yearNum
-    local remaining = os.time({
-        year = fullYear,
-        month = tonumber(mo),
-        day = tonumber(d),
-        hour = tonumber(h),
-        min = tonumber(m),
-        sec = 0
-    }) - os.time()
-
-    if remaining > 315360000 then  -- more than 10 years = lifetime
-        return "Lifetime", Color3.fromRGB(0, 255, 0)
+    if not remaining or remaining <= 0 then
+        return "Expired", Color3.fromRGB(255, 50, 50)
     end
 
-    if remaining <= 0 then
-        return "Expired", Color3.fromRGB(255, 50, 50)
+    if remaining > 315360000 then
+        return "Lifetime", Color3.fromRGB(0, 255, 0)
     end
 
     local green = Color3.fromRGB(0, 255, 0)
     local red = Color3.fromRGB(255, 50, 50)
+
     local twelveHours = 43200
-    local color
-    if remaining >= twelveHours then
-        color = green
-    else
-        local t = 1 - (remaining / twelveHours)
-        color = green:Lerp(red, t)
-    end
+    local color = remaining >= twelveHours
+        and green
+        or green:Lerp(red, 1 - (remaining / twelveHours))
+
     local days = math.floor(remaining/86400)
     local hours = math.floor((remaining%86400)/3600)
     local mins = math.floor((remaining%3600)/60)
@@ -10885,6 +10869,8 @@ local function getTimeRemaining()
         return string.format("%dh %dm", hours, mins), color
     end
 end
+
+
 local timerText, timerColor = getTimeRemaining()  -- still needed for initial build
 
 -- Then hook into the validation result
