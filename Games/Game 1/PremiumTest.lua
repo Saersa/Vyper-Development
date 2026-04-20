@@ -29,8 +29,10 @@ local Window = WindUI:CreateWindow({
         Note = "By completing this key system you support the devs.",        
         API = {                                                     
             {
-                Type = "pandadevelopment",
-                ServiceId = "myServiceId",
+                Type = "junkiedevelopment",
+                Service = "Vyper",
+                Identifier = "1078290",
+                Provider = "Vyper"
             },                                                      
         },                                                          
     }, 
@@ -47,7 +49,12 @@ Window:Tag({
     Radius = 8,
 })
 
-if Window:IsPremium() then
+
+function checkPremium()
+    return Window:IsPremium()
+end
+
+if checkPremium() then
     local PremiumTab = Window:Tab({ Title = "Premium ⭐" })
     -- add premium elements...
 end
