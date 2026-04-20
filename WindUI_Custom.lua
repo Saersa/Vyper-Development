@@ -1528,8 +1528,13 @@ function JnkieModule.New(Service,Identifier,Provider)
 
 
             local reason = result.reason or result.message or "UNKNOWN"
-            local isPremium = result.isPremium or false
-            local expires = result.expiresAt and (result.expiresAt - os.time()) or 0
+            local isPremium = result.is_premium or false
+            local expires = result.expires_at and (result.expires_at - os.time()) or 0
+            print("[Vyper] - Expires: " .. tostring(expires))
+            repeat 
+                task.wait() 
+            until expires ~= nil
+            print("[Vyper] - Expires: " .. tostring(expires))
 
             if reason == "KEYLESS" then
                 print("[Vyper] - Mode: Keyless")
