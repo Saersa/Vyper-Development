@@ -25,17 +25,6 @@ local Window = WindUI:CreateWindow({
             print("clicked")
         end,
     },
-     KeySystem = {                                                   
-        Note = "By completing this key system you support the devs.",        
-        API = {                                                     
-            {
-                Type = "junkiedevelopment",
-                Service = "Vyper",
-                Identifier = "1078290",
-                Provider = "Vyper"
-            },                                                      
-        },                                                          
-    }, 
     Topbar = {
         Height = 44,
         ButtonsType = "Default",
