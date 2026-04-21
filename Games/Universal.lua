@@ -1,5 +1,5 @@
 --[[
-    Vyper - Sniper Duels Edition
+    Vyper - Roblox Universal Script
     Features: ESP, Aimbot, Rage (Silent Aim, Triggerbot, No Recoil, Rapid Fire)
     UI: WindUI Custom
 --]]
@@ -7,14 +7,16 @@
 -- Load WindUI
 local WindUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/Saersa/Vyper-Development/refs/heads/main/WindUI_Custom.lua"))()
 
+-- Create Window
 local Window = WindUI:CreateWindow({
-    Title = "Vyper - Sniper Duels",
+    Title = "Vyper",
     Icon = "crosshair",
-    Author = "by .ftgs and .ftgs",
+    Author = "By: Vyper",
     Folder = "Vyper",
     NewElements = true,
-    Size = UDim2.fromOffset(600, 500),
+
     ToggleKey = Enum.KeyCode.RightShift,
+    Size = UDim2.fromOffset(600, 500),
     MinSize = Vector2.new(600, 500),
     MaxSize = Vector2.new(600, 500),
     Transparent = true,
@@ -318,7 +320,7 @@ local function updateESP()
     end
 end
 
--- ====================== AIMBOT SYSTEM (PATCHED) ======================
+-- ====================== AIMBOT SYSTEM ======================
 local function isVisible(targetPart)
     if not Settings.VisibilityCheck then return true end
     local myHead = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Head")
@@ -358,12 +360,6 @@ local function getClosestTarget()
     if not myChar then return nil end
     local myRoot = myChar:FindFirstChild("HumanoidRootPart")
     if not myRoot then return nil end
-
-    -- Safety: ensure Camera is valid
-    if not Camera or not Camera:IsA("Camera") then
-        Camera = workspace.CurrentCamera
-        if not Camera then return nil end
-    end
     
     local screenCenter = Vector2.new(Camera.ViewportSize.X / 2, Camera.ViewportSize.Y / 2)
     local closest = nil
@@ -383,11 +379,8 @@ local function getClosestTarget()
         
         if not isVisible(aimPart) then continue end
         
-        -- Wrap in pcall to catch any unexpected errors
-        local success, screenPos, onScreen = pcall(function()
-            return Camera:WorldToScreenPoint(aimPart.Position)
-        end)
-        if not success or not onScreen then continue end
+        local screenPos, onScreen = Camera:WorldToScreenPoint(aimPart.Position)
+        if not onScreen then continue end
         
         local distFromCenter = (Vector2.new(screenPos.X, screenPos.Y) - screenCenter).Magnitude
         if distFromCenter < minDist then
@@ -397,35 +390,6 @@ local function getClosestTarget()
     end
     
     return closest
-end
-
--- Triggerbot: Auto-fire when crosshair over enemy
-local function triggerbotCheck()
-    if not Settings.Triggerbot then return end
-    if not UserInputService:IsMouseButtonPressed(Settings.TriggerbotKey) then return end
-    
-    local target = getClosestTarget()
-    if target then
-        local myChar = LocalPlayer.Character
-        if not myChar then return end
-        local myHead = myChar:FindFirstChild("Head")
-        local myRoot = myChar:FindFirstChild("HumanoidRootPart")
-        if not myHead or not myRoot then return end
-        
-        local timestamp = os.clock()
-        local muzzlePos = myHead.Position
-        local targetPos = target.Position
-        
-        local fireArgs = {
-            timestamp,
-            muzzlePos,
-            targetPos,
-            [7] = true
-        }
-        
-        FireRemote:FireServer(fireArgs)
-        task.wait(0.1)
-    end
 end
 
 local function aimAt(targetPart)
@@ -463,72 +427,8 @@ local function updateFOVCircle()
     end
 end
 
--- ====================== RAGE FEATURES (Sniper Duels Specific) ======================
-local FireRemote = ReplicatedStorage:WaitForChild("Remotes"):WaitForChild("Weapons"):WaitForChild("Gun"):WaitForChild("Fire")
 
--- Silent Aim Hook
-local oldNamecall
-oldNamecall = hookmetamethod(game, "__namecall", function(self, ...)
-    local method = getnamecallmethod()
-    local args = {...}
-    
-    if Settings.SilentAim and method == "FireServer" and self == FireRemote then
-        local target = getClosestTarget()
-        if target then
-            -- The remote expects a table with keys: [1] = timestamp, [2] = muzzlePos, [3] = targetPos, [7] = true
-            local fireArgs = args[1]
-            if type(fireArgs) == "table" then
-                -- Replace target position (index 3) with the enemy aim part position
-                fireArgs[3] = target.Position
-                -- Note: muzzle position (index 2) can be left as is or adjusted if needed
-                return oldNamecall(self, fireArgs)
-            end
-        end
-    end
-    
-    return oldNamecall(self, ...)
-end)
 
--- Triggerbot: Auto-fire when crosshair over enemy
-local VirtualInputManager = game:GetService("VirtualInputManager")
-local function triggerbotCheck()
-    if not Settings.Triggerbot then return end
-    if not UserInputService:IsMouseButtonPressed(Settings.TriggerbotKey) then return end
-    
-    local target = getClosestTarget()
-    if target then
-        -- Construct the fire arguments
-        local myChar = LocalPlayer.Character
-        if not myChar then return end
-        local myHead = myChar:FindFirstChild("Head")
-        local myRoot = myChar:FindFirstChild("HumanoidRootPart")
-        if not myHead or not myRoot then return end
-        
-        local timestamp = os.clock()
-        local muzzlePos = myHead.Position  -- or weapon barrel position, adjust if needed
-        local targetPos = target.Position
-        
-        local fireArgs = {
-            timestamp,
-            muzzlePos,
-            targetPos,
-            [7] = true
-        }
-        
-        FireRemote:FireServer(fireArgs)
-        task.wait(0.1) -- Cooldown to prevent spamming
-    end
-end
-
--- No Recoil: Not applicable in Sniper Duels (maybe camera shake?); placeholder
-local function applyNoRecoil()
-    -- Sniper Duels doesn't have traditional recoil; you can add camera stabilization if needed
-end
-
--- Rapid Fire: Not applicable for bolt-action snipers; placeholder
-local function applyRapidFire()
-    -- In sniper duels, rapid fire is unrealistic; we can skip or implement as faster bolt cycling
-end
 
 -- ====================== PLAYER TRACKING ======================
 local function onPlayerAdded(player)
@@ -556,7 +456,8 @@ Players.PlayerRemoving:Connect(onPlayerRemoving)
 -- ====================== UI CREATION ======================
 local ESPTab = Window:Tab({ Title = "ESP" })
 local AimbotTab = Window:Tab({ Title = "Aimbot" })
-local RageTab = Window:Tab({ Title = "Rage" })
+
+local RightShiftToToggle = Window:Tab({ Title = "RightShift To Toggle", Locked = true })
 
 -- ESP Tab
 local ESPSection = ESPTab:Section({ Title = "ESP Settings" })
@@ -619,11 +520,13 @@ ESPSection:Slider({
     Title = "Max ESP Distance",
     Step = 10,
     Value = {
-        Min = 100,
+        Min = 10,
         Max = 2000,
         Default = Settings.MaxESPDistance,
     },
-    Callback = function(value) Settings.MaxESPDistance = value end,
+    Callback = function(value) 
+        Settings.MaxESPDistance = (value * 0.28)
+     end,
 })
 
 local ColorSection = ESPTab:Section({ Title = "Colors" })
@@ -699,37 +602,10 @@ AimbotSection:Keybind({
     end,
 })
 
--- Rage Tab
-local RageSection = RageTab:Section({ Title = "Rage Features" })
-
-RageSection:Toggle({
-    Title = "Silent Aim",
-    Default = Settings.SilentAim,
-    Callback = function(value) Settings.SilentAim = value end,
-})
-
-RageSection:Toggle({
-    Title = "Triggerbot",
-    Default = Settings.Triggerbot,
-    Callback = function(value) Settings.Triggerbot = value end,
-})
-
-RageSection:Keybind({
-    Title = "Triggerbot Key",
-    Default = "MouseButton1",
-    Callback = function(key)
-        local inputType = Enum.UserInputType[key]
-        if inputType then Settings.TriggerbotKey = inputType end
-    end,
-})
-
-
-
 -- ====================== MAIN LOOP ======================
 RunService.RenderStepped:Connect(function()
     updateESP()
     updateFOVCircle()
-    applyNoRecoil()
     
     if Settings.Aimbot then
         local isKeyDown = UserInputService:IsMouseButtonPressed(Settings.AimKey)
@@ -741,9 +617,5 @@ RunService.RenderStepped:Connect(function()
         end
     end
     
-    if Settings.Triggerbot then
-        triggerbotCheck()
-    end
+    
 end)
-
-print("Vyper - Sniper Duels loaded successfully!")
