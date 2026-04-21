@@ -318,7 +318,7 @@ local function updateESP()
     end
 end
 
--- ====================== AIMBOT SYSTEM ======================
+-- ====================== AIMBOT SYSTEM (PATCHED) ======================
 local function isVisible(targetPart)
     if not Settings.VisibilityCheck then return true end
     local myHead = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Head")
@@ -358,6 +358,12 @@ local function getClosestTarget()
     if not myChar then return nil end
     local myRoot = myChar:FindFirstChild("HumanoidRootPart")
     if not myRoot then return nil end
+
+    -- Safety: ensure Camera is valid
+    if not Camera or not Camera:IsA("Camera") then
+        Camera = workspace.CurrentCamera
+        if not Camera then return nil end
+    end
     
     local screenCenter = Vector2.new(Camera.ViewportSize.X / 2, Camera.ViewportSize.Y / 2)
     local closest = nil
@@ -377,8 +383,11 @@ local function getClosestTarget()
         
         if not isVisible(aimPart) then continue end
         
-        local screenPos, onScreen = Camera:WorldToScreenPoint(aimPart.Position)
-        if not onScreen then continue end
+        -- Wrap in pcall to catch any unexpected errors
+        local success, screenPos, onScreen = pcall(function()
+            return Camera:WorldToScreenPoint(aimPart.Position)
+        end)
+        if not success or not onScreen then continue end
         
         local distFromCenter = (Vector2.new(screenPos.X, screenPos.Y) - screenCenter).Magnitude
         if distFromCenter < minDist then
@@ -388,6 +397,35 @@ local function getClosestTarget()
     end
     
     return closest
+end
+
+-- Triggerbot: Auto-fire when crosshair over enemy
+local function triggerbotCheck()
+    if not Settings.Triggerbot then return end
+    if not UserInputService:IsMouseButtonPressed(Settings.TriggerbotKey) then return end
+    
+    local target = getClosestTarget()
+    if target then
+        local myChar = LocalPlayer.Character
+        if not myChar then return end
+        local myHead = myChar:FindFirstChild("Head")
+        local myRoot = myChar:FindFirstChild("HumanoidRootPart")
+        if not myHead or not myRoot then return end
+        
+        local timestamp = os.clock()
+        local muzzlePos = myHead.Position
+        local targetPos = target.Position
+        
+        local fireArgs = {
+            timestamp,
+            muzzlePos,
+            targetPos,
+            [7] = true
+        }
+        
+        FireRemote:FireServer(fireArgs)
+        task.wait(0.1)
+    end
 end
 
 local function aimAt(targetPart)
