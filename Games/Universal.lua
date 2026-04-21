@@ -11,7 +11,7 @@ local WindUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/Saersa
 local Window = WindUI:CreateWindow({
     Title = "Vyper",
     Icon = "crosshair",
-    Author = "by .ftgs and .ftgs",
+    Author = "By: Vyper",
     Folder = "Vyper",
     NewElements = true,
     Size = UDim2.fromOffset(600, 500),
@@ -606,11 +606,13 @@ ESPSection:Slider({
     Title = "Max ESP Distance",
     Step = 10,
     Value = {
-        Min = 100,
+        Min = 10,
         Max = 2000,
         Default = Settings.MaxESPDistance,
     },
-    Callback = function(value) Settings.MaxESPDistance = value end,
+    Callback = function(value) 
+        Settings.MaxESPDistance = (value * 0.28)
+     end,
 })
 
 local ColorSection = ESPTab:Section({ Title = "Colors" })
@@ -685,46 +687,6 @@ AimbotSection:Keybind({
         if inputType then Settings.AimKey = inputType end
     end,
 })
-
--- Rage Tab
-local RageSection = RageTab:Section({ Title = "Rage Features" })
-
-RageSection:Toggle({
-    Title = "Silent Aim",
-    Default = Settings.SilentAim,
-    Callback = function(value) Settings.SilentAim = value end,
-})
-
-RageSection:Toggle({
-    Title = "Triggerbot",
-    Default = Settings.Triggerbot,
-    Callback = function(value) Settings.Triggerbot = value end,
-})
-
-RageSection:Keybind({
-    Title = "Triggerbot Key",
-    Default = "MouseButton1",
-    Callback = function(key)
-        local inputType = Enum.UserInputType[key]
-        if inputType then Settings.TriggerbotKey = inputType end
-    end,
-})
-
-RageSection:Toggle({
-    Title = "No Recoil",
-    Default = Settings.NoRecoil,
-    Callback = function(value) Settings.NoRecoil = value end,
-})
-
-RageSection:Toggle({
-    Title = "Rapid Fire",
-    Default = Settings.RapidFire,
-    Callback = function(value)
-        Settings.RapidFire = value
-        applyRapidFire()
-    end,
-})
-
 
 -- ====================== MAIN LOOP ======================
 RunService.RenderStepped:Connect(function()
