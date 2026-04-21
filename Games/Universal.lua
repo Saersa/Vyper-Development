@@ -1,5 +1,5 @@
 --[[
-    Vyper - Roblox Universal Script
+    Vyper - Sniper Duels Edition
     Features: ESP, Aimbot, Rage (Silent Aim, Triggerbot, No Recoil, Rapid Fire)
     UI: WindUI Custom
 --]]
@@ -7,15 +7,14 @@
 -- Load WindUI
 local WindUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/Saersa/Vyper-Development/refs/heads/main/WindUI_Custom.lua"))()
 
--- Create Window
 local Window = WindUI:CreateWindow({
-    Title = "Vyper",
+    Title = "Vyper - Sniper Duels",
     Icon = "crosshair",
-    Author = "By: Vyper",
+    Author = "by .ftgs and .ftgs",
     Folder = "Vyper",
     NewElements = true,
-    ToggleKey = Enum.KeyCode.RightShift,
     Size = UDim2.fromOffset(600, 500),
+    ToggleKey = Enum.KeyCode.RightShift,
     MinSize = Vector2.new(600, 500),
     MaxSize = Vector2.new(600, 500),
     Transparent = true,
@@ -426,26 +425,25 @@ local function updateFOVCircle()
     end
 end
 
--- ====================== RAGE FEATURES ======================
--- Silent Aim: Redirects bullets to target's aim part
+-- ====================== RAGE FEATURES (Sniper Duels Specific) ======================
+local FireRemote = ReplicatedStorage:WaitForChild("Remotes"):WaitForChild("Weapons"):WaitForChild("Gun"):WaitForChild("Fire")
+
+-- Silent Aim Hook
 local oldNamecall
 oldNamecall = hookmetamethod(game, "__namecall", function(self, ...)
     local method = getnamecallmethod()
     local args = {...}
     
-    if Settings.SilentAim and method == "FireServer" and self.Name == "RemoteEvent" then
-        local tool = LocalPlayer.Character and LocalPlayer.Character:FindFirstChildOfClass("Tool")
-        if tool then
-            local target = getClosestTarget()
-            if target then
-                -- Attempt to modify bullet direction (game-specific)
-                -- This is a generic approach; may need adjustment per game
-                if #args >= 2 and typeof(args[2]) == "Vector3" then
-                    args[2] = target.Position
-                elseif #args >= 1 and typeof(args[1]) == "Vector3" then
-                    args[1] = target.Position
-                end
-                return oldNamecall(self, unpack(args))
+    if Settings.SilentAim and method == "FireServer" and self == FireRemote then
+        local target = getClosestTarget()
+        if target then
+            -- The remote expects a table with keys: [1] = timestamp, [2] = muzzlePos, [3] = targetPos, [7] = true
+            local fireArgs = args[1]
+            if type(fireArgs) == "table" then
+                -- Replace target position (index 3) with the enemy aim part position
+                fireArgs[3] = target.Position
+                -- Note: muzzle position (index 2) can be left as is or adjusted if needed
+                return oldNamecall(self, fireArgs)
             end
         end
     end
@@ -453,69 +451,45 @@ oldNamecall = hookmetamethod(game, "__namecall", function(self, ...)
     return oldNamecall(self, ...)
 end)
 
--- Triggerbot: Auto-shoot when crosshair over enemy
-local UserInputService = game:GetService("UserInputService")
+-- Triggerbot: Auto-fire when crosshair over enemy
 local VirtualInputManager = game:GetService("VirtualInputManager")
-
 local function triggerbotCheck()
     if not Settings.Triggerbot then return end
     if not UserInputService:IsMouseButtonPressed(Settings.TriggerbotKey) then return end
     
     local target = getClosestTarget()
     if target then
-        -- Simulate left click
-        VirtualInputManager:SendMouseButtonEvent(0, 0, 0, true, game, 0)
-        task.wait(0.05)
-        VirtualInputManager:SendMouseButtonEvent(0, 0, 0, false, game, 0)
+        -- Construct the fire arguments
+        local myChar = LocalPlayer.Character
+        if not myChar then return end
+        local myHead = myChar:FindFirstChild("Head")
+        local myRoot = myChar:FindFirstChild("HumanoidRootPart")
+        if not myHead or not myRoot then return end
+        
+        local timestamp = os.clock()
+        local muzzlePos = myHead.Position  -- or weapon barrel position, adjust if needed
+        local targetPos = target.Position
+        
+        local fireArgs = {
+            timestamp,
+            muzzlePos,
+            targetPos,
+            [7] = true
+        }
+        
+        FireRemote:FireServer(fireArgs)
+        task.wait(0.1) -- Cooldown to prevent spamming
     end
 end
 
--- No Recoil: Zero out recoil values on current tool
+-- No Recoil: Not applicable in Sniper Duels (maybe camera shake?); placeholder
 local function applyNoRecoil()
-    if not Settings.NoRecoil then return end
-    local tool = LocalPlayer.Character and LocalPlayer.Character:FindFirstChildOfClass("Tool")
-    if tool then
-        local recoil = tool:FindFirstChild("Recoil") or tool:FindFirstChild("recoil")
-        if recoil and recoil:IsA("NumberValue") then
-            recoil.Value = 0
-        end
-        -- Common recoil patterns
-        for _, v in ipairs(tool:GetDescendants()) do
-            if v.Name == "Recoil" and v:IsA("NumberValue") then
-                v.Value = 0
-            end
-        end
-    end
+    -- Sniper Duels doesn't have traditional recoil; you can add camera stabilization if needed
 end
 
--- Rapid Fire: Increase fire rate
-local fireRateConnections = {}
+-- Rapid Fire: Not applicable for bolt-action snipers; placeholder
 local function applyRapidFire()
-    if not Settings.RapidFire then
-        for _, conn in ipairs(fireRateConnections) do
-            conn:Disconnect()
-        end
-        fireRateConnections = {}
-        return
-    end
-    
-    local tool = LocalPlayer.Character and LocalPlayer.Character:FindFirstChildOfClass("Tool")
-    if not tool then return end
-    
-    local fireEvent = tool:FindFirstChild("RemoteEvent") or tool:FindFirstChild("Fire")
-    if fireEvent and fireEvent:IsA("RemoteEvent") then
-        -- Hook the tool's activation
-        local oldActivate = tool.Activate
-        tool.Activate = function(...)
-            if Settings.RapidFire then
-                while Settings.RapidFire and UserInputService:IsMouseButtonPressed(Enum.UserInputType.MouseButton1) do
-                    fireEvent:FireServer()
-                    task.wait(0.05) -- Adjust delay as needed
-                end
-            end
-            return oldActivate(...)
-        end
-    end
+    -- In sniper duels, rapid fire is unrealistic; we can skip or implement as faster bolt cycling
 end
 
 -- ====================== PLAYER TRACKING ======================
@@ -607,13 +581,11 @@ ESPSection:Slider({
     Title = "Max ESP Distance",
     Step = 10,
     Value = {
-        Min = 10,
+        Min = 100,
         Max = 2000,
         Default = Settings.MaxESPDistance,
     },
-    Callback = function(value) 
-        Settings.MaxESPDistance = (value * 0.28)
-     end,
+    Callback = function(value) Settings.MaxESPDistance = value end,
 })
 
 local ColorSection = ESPTab:Section({ Title = "Colors" })
@@ -689,6 +661,32 @@ AimbotSection:Keybind({
     end,
 })
 
+-- Rage Tab
+local RageSection = RageTab:Section({ Title = "Rage Features" })
+
+RageSection:Toggle({
+    Title = "Silent Aim",
+    Default = Settings.SilentAim,
+    Callback = function(value) Settings.SilentAim = value end,
+})
+
+RageSection:Toggle({
+    Title = "Triggerbot",
+    Default = Settings.Triggerbot,
+    Callback = function(value) Settings.Triggerbot = value end,
+})
+
+RageSection:Keybind({
+    Title = "Triggerbot Key",
+    Default = "MouseButton1",
+    Callback = function(key)
+        local inputType = Enum.UserInputType[key]
+        if inputType then Settings.TriggerbotKey = inputType end
+    end,
+})
+
+
+
 -- ====================== MAIN LOOP ======================
 RunService.RenderStepped:Connect(function()
     updateESP()
@@ -710,4 +708,4 @@ RunService.RenderStepped:Connect(function()
     end
 end)
 
-print("Vyper loaded successfully! UI should be visible.")
+print("Vyper - Sniper Duels loaded successfully!")
