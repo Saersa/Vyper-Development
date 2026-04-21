@@ -672,7 +672,7 @@ AimbotSection:Slider({
 
 AimbotSection:Dropdown({
     Title = "Aim Part",
-    Items = {"Head", "Torso", "Left Arm", "Right Arm", "Left Leg", "Right Leg"},
+    Values  = {"Head", "Torso", "Left Arm", "Right Arm", "Left Leg", "Right Leg"},
     Default = Settings.AimPart,
     Callback = function(value) Settings.AimPart = value end,
 })
