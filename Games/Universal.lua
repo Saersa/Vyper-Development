@@ -524,8 +524,15 @@ ESPSection:Toggle({
 
 ESPSection:Slider({
     Title = "Max ESP Distance",
-    Min = 100,
-    Max = 2000,
+    
+    
+    Value = {
+        Min = 10,
+        Max = 2000,
+        Default = 250,
+    },
+
+        
     Default = Settings.MaxESPDistance,
     Callback = function(value)
         Settings.MaxESPDistance = value
