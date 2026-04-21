@@ -10735,11 +10735,11 @@ end
 local function getTimeRemaining()
     local remaining = getgenv().expiresAt
 
-    if not remaining or remaining <= 0 then
+    if not remaining or remaining < 0 or remaining == -1 then
         return "Expired", Color3.fromRGB(255, 50, 50)
     end
 
-    if remaining > 315360000 then
+    if remaining > 315360000 or remaining == math.huge then
         return "Lifetime", Color3.fromRGB(0, 255, 0)
     end
 
