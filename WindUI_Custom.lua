@@ -12637,14 +12637,14 @@ aa:SetLanguage(ao.Language)
 
 -- Premium API — usable anywhere after CreateWindow
 function aa.IsPremium(ax)
-return getgenv().Client.isPremium or aa.isPremium==true 
+return getgenv().Client.isPremium == true or aa.isPremium==true 
 end
 
 function aa.CheckPremium(ax)
 if aa._checkPremiumFn then
 return aa._checkPremiumFn()
 end
-return getgenv().Client.isPremium or aa.isPremium==true
+return getgenv().Client.isPremium == true or aa.isPremium==true
 end
 
 function aa.GetExpiry(ax)
