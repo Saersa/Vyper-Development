@@ -658,9 +658,6 @@ RageSection:Toggle({
     end,
 })
 
-RageSection:Label({
-    Title = "More rage features will be added soon!",
-})
 
 -- ====================== MAIN LOOP ======================
 RunService.RenderStepped:Connect(function()
