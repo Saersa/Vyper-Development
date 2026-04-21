@@ -14,6 +14,7 @@ local Window = WindUI:CreateWindow({
     Author = "By: Vyper",
     Folder = "Vyper",
     NewElements = true,
+    ToggleKey = Enum.KeyCode.RightShift,
     Size = UDim2.fromOffset(600, 500),
     MinSize = Vector2.new(600, 500),
     MaxSize = Vector2.new(600, 500),
