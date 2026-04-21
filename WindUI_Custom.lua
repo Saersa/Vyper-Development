@@ -10733,7 +10733,7 @@ return aC
 end
 
 local function getTimeRemaining()
-    local remaining = getgenv().expiresAt
+    local remaining = getgenv().Client.expiresAt
 
     if not remaining or remaining < 0 or remaining == -1 then
         return "Expired", Color3.fromRGB(255, 50, 50)
@@ -10768,10 +10768,10 @@ local timerText, timerColor = getTimeRemaining()  -- still needed for initial bu
 -- Then hook into the validation result
 Connections["UpdateKeyTimer"] =  task.spawn(function()
     -- wait until expiresAt gets set by ValidateKey
-    repeat task.wait(60) until getgenv().expiresAt ~= nil or getgenv()._keyDone
+    repeat task.wait(60) until getgenv().Client.expiresAt ~= nil or getgenv()._keyDone
 
     local label = au.UIElements.SideBarContainer:FindFirstChild("KeySystemTimer", true)
-    if label and getgenv().expiresAt then
+    if label and getgenv().Client.expiresAt then
         local text, color = getTimeRemaining()
         label.Text = "Time Left: " .. text
         label.TextColor3 = color
@@ -12637,18 +12637,18 @@ aa:SetLanguage(ao.Language)
 
 -- Premium API — usable anywhere after CreateWindow
 function aa.IsPremium(ax)
-return Context.isPremium == true or aa.isPremium==true 
+return getgenv().Client.isPremium or aa.isPremium==true 
 end
 
 function aa.CheckPremium(ax)
 if aa._checkPremiumFn then
 return aa._checkPremiumFn()
 end
-return Context.isPremium == true or aa.isPremium==true
+return getgenv().Client.isPremium or aa.isPremium==true
 end
 
 function aa.GetExpiry(ax)
-return getgenv().expiresAt or aa.expiresAt
+return getgenv().Client.expiresAt or aa.expiresAt
 end
 
 function aa.CreateWindow(ax,ay)
@@ -12744,8 +12744,8 @@ function aa.CreateWindow(ax,ay)
     if authOk then
     b=true
     if authResult then
-    aa.isPremium=Context.isPremium == true or authResult.isPremium==true
-    aa.expiresAt=getgenv().expiresAt or authResult.expiresAt
+    aa.isPremium=getgenv().Client.isPremium or authResult.isPremium==true
+    aa.expiresAt=getgenv().Client.expiresAt or authResult.expiresAt
     aa._checkPremiumFn=authResult.checkPremium
     end
     break
