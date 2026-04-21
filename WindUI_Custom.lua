@@ -10733,7 +10733,8 @@ return aC
 end
 
 local function getTimeRemaining()
-    local remaining = getgenv().Client.expiresAt or 0
+    getgenv().Client.expiresAt = getgenv().Client.expiresAt or 0
+    local remaining = getgenv().Client.expiresAt
 
     if not remaining or remaining < 0 or remaining == -1 then
         return "Expired", Color3.fromRGB(255, 50, 50)
