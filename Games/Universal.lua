@@ -725,9 +725,6 @@ RageSection:Toggle({
     end,
 })
 
-RageSection:Label({
-    Title = "Silent Aim redirects bullets to target.",
-})
 
 -- ====================== MAIN LOOP ======================
 RunService.RenderStepped:Connect(function()
