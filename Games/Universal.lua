@@ -1,6 +1,6 @@
 --[[
     Vyper - Roblox Universal Script
-    Features: ESP, Aimbot, Rage (placeholder)
+    Features: ESP, Aimbot, Rage (Silent Aim, Triggerbot, No Recoil, Rapid Fire)
     UI: WindUI Custom
 --]]
 
@@ -49,8 +49,9 @@ local RunService = game:GetService("RunService")
 local UserInputService = game:GetService("UserInputService")
 local LocalPlayer = Players.LocalPlayer
 local Camera = workspace.CurrentCamera
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
--- ====================== SETTINGS (Controlled by UI) ======================
+-- ====================== SETTINGS ======================
 local Settings = {
     -- ESP
     MasterESP = true,
@@ -62,7 +63,7 @@ local Settings = {
     ArmorBar = true,
     Snapline = true,
     TeamCheck = true,
-    MaxESPDistance = 1000,       -- Studs
+    MaxESPDistance = 1000,
     FriendlyColor = Color3.fromRGB(0, 120, 255),
     EnemyColor = Color3.fromRGB(255, 50, 50),
     
@@ -75,24 +76,23 @@ local Settings = {
     VisibilityCheck = true,
     AimPart = "Head",
     
-    -- Rage (placeholders)
+    -- Rage
     SilentAim = false,
     Triggerbot = false,
     NoRecoil = false,
     RapidFire = false,
+    TriggerbotKey = Enum.UserInputType.MouseButton1,
 }
 
 -- ====================== ESP SYSTEM ======================
 local ActiveDrawings = {}
 local FOVCircle = nil
 
--- Constants
 local BOX_THICKNESS = 1.5
 local BOX_TRANSPARENCY = 0.7
 local TEXT_FONT = 2
 local SNAPLINE_TRANSPARENCY = 0.4
 
--- Helper: get armor
 local function getArmor(character)
     local humanoid = character:FindFirstChild("Humanoid")
     if humanoid then
@@ -108,7 +108,6 @@ local function getArmor(character)
     return 0
 end
 
--- Create drawings for a player
 local function createESP(player)
     local drawings = {}
     
@@ -185,7 +184,6 @@ local function createESP(player)
     return drawings
 end
 
--- ESP Update Loop
 local function updateESP()
     if not Settings.MasterESP then
         for _, drawings in pairs(ActiveDrawings) do
@@ -208,7 +206,6 @@ local function updateESP()
             continue
         end
         
-        -- Distance check
         local distance = myRoot and (myRoot.Position - root.Position).Magnitude or 0
         if distance > Settings.MaxESPDistance then
             for _, d in ipairs(drawings) do d.Visible = false end
@@ -239,7 +236,6 @@ local function updateESP()
         
         local boxColor = isEnemy and Settings.EnemyColor or Settings.FriendlyColor
         
-        -- Box Outline
         if Settings.Box then
             drawings[1].Position = Vector2.new(boxX, boxY)
             drawings[1].Size = Vector2.new(width, height)
@@ -248,7 +244,6 @@ local function updateESP()
             drawings[1].Visible = false
         end
         
-        -- Box Fill
         if Settings.BoxFill then
             drawings[2].Position = Vector2.new(boxX, boxY)
             drawings[2].Size = Vector2.new(width, height)
@@ -258,7 +253,6 @@ local function updateESP()
             drawings[2].Visible = false
         end
         
-        -- Snapline
         if Settings.Snapline then
             local bottomCenter = Vector2.new(screenSize.X / 2, screenSize.Y)
             drawings[3].From = bottomCenter
@@ -269,7 +263,6 @@ local function updateESP()
             drawings[3].Visible = false
         end
         
-        -- Name
         if Settings.Name then
             drawings[4].Text = player.Name
             drawings[4].Position = Vector2.new(centerX, boxY - 20)
@@ -278,7 +271,6 @@ local function updateESP()
             drawings[4].Visible = false
         end
         
-        -- Health Bar
         if Settings.HealthBar then
             local healthPercent = humanoid.Health / humanoid.MaxHealth
             local barH = height * healthPercent
@@ -297,7 +289,6 @@ local function updateESP()
             drawings[6].Visible = false
         end
         
-        -- Armor Bar
         local armor = getArmor(character)
         if Settings.ArmorBar and armor > 0 then
             local maxArmor = 100
@@ -317,7 +308,6 @@ local function updateESP()
             drawings[8].Visible = false
         end
         
-        -- Distance
         if Settings.Distance then
             drawings[9].Text = string.format("%.0f m", distance * 0.28)
             drawings[9].Position = Vector2.new(centerX, boxY + height + 5)
@@ -345,6 +335,24 @@ local function isVisible(targetPart)
     return false
 end
 
+local function getAimPart(character)
+    if Settings.AimPart == "Head" then
+        return character:FindFirstChild("Head")
+    elseif Settings.AimPart == "Torso" then
+        return character:FindFirstChild("Torso") or character:FindFirstChild("UpperTorso")
+    elseif Settings.AimPart == "Left Arm" then
+        return character:FindFirstChild("LeftUpperArm") or character:FindFirstChild("Left Arm")
+    elseif Settings.AimPart == "Right Arm" then
+        return character:FindFirstChild("RightUpperArm") or character:FindFirstChild("Right Arm")
+    elseif Settings.AimPart == "Left Leg" then
+        return character:FindFirstChild("LeftUpperLeg") or character:FindFirstChild("Left Leg")
+    elseif Settings.AimPart == "Right Leg" then
+        return character:FindFirstChild("RightUpperLeg") or character:FindFirstChild("Right Leg")
+    else
+        return character:FindFirstChild("Head")
+    end
+end
+
 local function getClosestTarget()
     local myChar = LocalPlayer.Character
     if not myChar then return nil end
@@ -364,7 +372,7 @@ local function getClosestTarget()
         
         if Settings.TeamCheck and player.Team == LocalPlayer.Team then continue end
         
-        local aimPart = char:FindFirstChild(Settings.AimPart)
+        local aimPart = getAimPart(char)
         if not aimPart then continue end
         
         if not isVisible(aimPart) then continue end
@@ -417,6 +425,98 @@ local function updateFOVCircle()
     end
 end
 
+-- ====================== RAGE FEATURES ======================
+-- Silent Aim: Redirects bullets to target's aim part
+local oldNamecall
+oldNamecall = hookmetamethod(game, "__namecall", function(self, ...)
+    local method = getnamecallmethod()
+    local args = {...}
+    
+    if Settings.SilentAim and method == "FireServer" and self.Name == "RemoteEvent" then
+        local tool = LocalPlayer.Character and LocalPlayer.Character:FindFirstChildOfClass("Tool")
+        if tool then
+            local target = getClosestTarget()
+            if target then
+                -- Attempt to modify bullet direction (game-specific)
+                -- This is a generic approach; may need adjustment per game
+                if #args >= 2 and typeof(args[2]) == "Vector3" then
+                    args[2] = target.Position
+                elseif #args >= 1 and typeof(args[1]) == "Vector3" then
+                    args[1] = target.Position
+                end
+                return oldNamecall(self, unpack(args))
+            end
+        end
+    end
+    
+    return oldNamecall(self, ...)
+end)
+
+-- Triggerbot: Auto-shoot when crosshair over enemy
+local UserInputService = game:GetService("UserInputService")
+local VirtualInputManager = game:GetService("VirtualInputManager")
+
+local function triggerbotCheck()
+    if not Settings.Triggerbot then return end
+    if not UserInputService:IsMouseButtonPressed(Settings.TriggerbotKey) then return end
+    
+    local target = getClosestTarget()
+    if target then
+        -- Simulate left click
+        VirtualInputManager:SendMouseButtonEvent(0, 0, 0, true, game, 0)
+        task.wait(0.05)
+        VirtualInputManager:SendMouseButtonEvent(0, 0, 0, false, game, 0)
+    end
+end
+
+-- No Recoil: Zero out recoil values on current tool
+local function applyNoRecoil()
+    if not Settings.NoRecoil then return end
+    local tool = LocalPlayer.Character and LocalPlayer.Character:FindFirstChildOfClass("Tool")
+    if tool then
+        local recoil = tool:FindFirstChild("Recoil") or tool:FindFirstChild("recoil")
+        if recoil and recoil:IsA("NumberValue") then
+            recoil.Value = 0
+        end
+        -- Common recoil patterns
+        for _, v in ipairs(tool:GetDescendants()) do
+            if v.Name == "Recoil" and v:IsA("NumberValue") then
+                v.Value = 0
+            end
+        end
+    end
+end
+
+-- Rapid Fire: Increase fire rate
+local fireRateConnections = {}
+local function applyRapidFire()
+    if not Settings.RapidFire then
+        for _, conn in ipairs(fireRateConnections) do
+            conn:Disconnect()
+        end
+        fireRateConnections = {}
+        return
+    end
+    
+    local tool = LocalPlayer.Character and LocalPlayer.Character:FindFirstChildOfClass("Tool")
+    if not tool then return end
+    
+    local fireEvent = tool:FindFirstChild("RemoteEvent") or tool:FindFirstChild("Fire")
+    if fireEvent and fireEvent:IsA("RemoteEvent") then
+        -- Hook the tool's activation
+        local oldActivate = tool.Activate
+        tool.Activate = function(...)
+            if Settings.RapidFire then
+                while Settings.RapidFire and UserInputService:IsMouseButtonPressed(Enum.UserInputType.MouseButton1) do
+                    fireEvent:FireServer()
+                    task.wait(0.05) -- Adjust delay as needed
+                end
+            end
+            return oldActivate(...)
+        end
+    end
+end
+
 -- ====================== PLAYER TRACKING ======================
 local function onPlayerAdded(player)
     if player ~= LocalPlayer then
@@ -440,103 +540,77 @@ end
 Players.PlayerAdded:Connect(onPlayerAdded)
 Players.PlayerRemoving:Connect(onPlayerRemoving)
 
--- ====================== UI CREATION (WindUI) ======================
-
--- Tabs
+-- ====================== UI CREATION ======================
 local ESPTab = Window:Tab({ Title = "ESP" })
 local AimbotTab = Window:Tab({ Title = "Aimbot" })
 local RageTab = Window:Tab({ Title = "Rage" })
 
--- ------------------- ESP TAB -------------------
+-- ESP Tab
 local ESPSection = ESPTab:Section({ Title = "ESP Settings" })
 
 ESPSection:Toggle({
     Title = "Master Switch",
     Default = Settings.MasterESP,
-    Callback = function(value)
-        Settings.MasterESP = value
-    end,
+    Callback = function(value) Settings.MasterESP = value end,
 })
 
 ESPSection:Toggle({
     Title = "Box",
     Default = Settings.Box,
-    Callback = function(value)
-        Settings.Box = value
-    end,
+    Callback = function(value) Settings.Box = value end,
 })
 
 ESPSection:Toggle({
     Title = "Box Fill",
     Default = Settings.BoxFill,
-    Callback = function(value)
-        Settings.BoxFill = value
-    end,
+    Callback = function(value) Settings.BoxFill = value end,
 })
 
 ESPSection:Toggle({
     Title = "Name",
     Default = Settings.Name,
-    Callback = function(value)
-        Settings.Name = value
-    end,
+    Callback = function(value) Settings.Name = value end,
 })
 
 ESPSection:Toggle({
     Title = "Distance",
     Default = Settings.Distance,
-    Callback = function(value)
-        Settings.Distance = value
-    end,
+    Callback = function(value) Settings.Distance = value end,
 })
 
 ESPSection:Toggle({
     Title = "Health Bar",
     Default = Settings.HealthBar,
-    Callback = function(value)
-        Settings.HealthBar = value
-    end,
+    Callback = function(value) Settings.HealthBar = value end,
 })
 
 ESPSection:Toggle({
     Title = "Armor Bar",
     Default = Settings.ArmorBar,
-    Callback = function(value)
-        Settings.ArmorBar = value
-    end,
+    Callback = function(value) Settings.ArmorBar = value end,
 })
 
 ESPSection:Toggle({
     Title = "Snapline",
     Default = Settings.Snapline,
-    Callback = function(value)
-        Settings.Snapline = value
-    end,
+    Callback = function(value) Settings.Snapline = value end,
 })
 
 ESPSection:Toggle({
     Title = "Team Check",
     Default = Settings.TeamCheck,
-    Callback = function(value)
-        Settings.TeamCheck = value
-    end,
+    Callback = function(value) Settings.TeamCheck = value end,
 })
 
 ESPSection:Slider({
     Title = "Max ESP Distance",
-    
-    
+    Step = 10,
     Value = {
-        Min = 10,
+        Min = 100,
         Max = 2000,
-        Default = 250,
+        Default = Settings.MaxESPDistance,
     },
-
-        
-    Default = Settings.MaxESPDistance,
-    Callback = function(value)
-        Settings.MaxESPDistance = value
-    end,
+    Callback = function(value) Settings.MaxESPDistance = value end,
 })
 
 local ColorSection = ESPTab:Section({ Title = "Colors" })
@@ -544,116 +618,102 @@ local ColorSection = ESPTab:Section({ Title = "Colors" })
 ColorSection:Colorpicker({
     Title = "Friendly Color",
     Default = Settings.FriendlyColor,
-    Callback = function(color)
-        Settings.FriendlyColor = color
-    end,
+    Callback = function(color) Settings.FriendlyColor = color end,
 })
 
 ColorSection:Colorpicker({
     Title = "Enemy Color",
     Default = Settings.EnemyColor,
-    Callback = function(color)
-        Settings.EnemyColor = color
-    end,
+    Callback = function(color) Settings.EnemyColor = color end,
 })
 
--- ------------------- AIMBOT TAB -------------------
+-- Aimbot Tab
 local AimbotSection = AimbotTab:Section({ Title = "Aimbot Settings" })
 
 AimbotSection:Toggle({
     Title = "Aimbot",
     Default = Settings.Aimbot,
-    Callback = function(value)
-        Settings.Aimbot = value
-    end,
+    Callback = function(value) Settings.Aimbot = value end,
 })
 
 AimbotSection:Toggle({
     Title = "Show FOV Circle",
     Default = Settings.ShowFOV,
-    Callback = function(value)
-        Settings.ShowFOV = value
-    end,
+    Callback = function(value) Settings.ShowFOV = value end,
 })
 
 AimbotSection:Toggle({
     Title = "Visibility Check",
     Default = Settings.VisibilityCheck,
-    Callback = function(value)
-        Settings.VisibilityCheck = value
-    end,
+    Callback = function(value) Settings.VisibilityCheck = value end,
 })
 
 AimbotSection:Slider({
     Title = "Smoothness",
-    Min = 1,
-    Max = 20,
-    Default = Settings.Smoothness,
-    Callback = function(value)
-        Settings.Smoothness = value
-    end,
+    Step = 1,
+    Value = {
+        Min = 1,
+        Max = 20,
+        Default = Settings.Smoothness,
+    },
+    Callback = function(value) Settings.Smoothness = value end,
 })
 
 AimbotSection:Slider({
     Title = "FOV Size",
-    Min = 50,
-    Max = 400,
-    Default = Settings.FOV,
-    Callback = function(value)
-        Settings.FOV = value
-    end,
+    Step = 5,
+    Value = {
+        Min = 50,
+        Max = 400,
+        Default = Settings.FOV,
+    },
+    Callback = function(value) Settings.FOV = value end,
 })
 
 AimbotSection:Dropdown({
     Title = "Aim Part",
-    Items = {"Head", "HumanoidRootPart", "Torso"},
+    Items = {"Head", "Torso", "Left Arm", "Right Arm", "Left Leg", "Right Leg"},
     Default = Settings.AimPart,
-    Callback = function(value)
-        Settings.AimPart = value
-    end,
+    Callback = function(value) Settings.AimPart = value end,
 })
 
--- Keybind for Aim Key (using WindUI's Keybind element)
 AimbotSection:Keybind({
     Title = "Aim Key",
     Default = "MouseButton2",
     Callback = function(key)
-        -- Convert string to Enum.UserInputType
         local inputType = Enum.UserInputType[key]
-        if inputType then
-            Settings.AimKey = inputType
-        end
+        if inputType then Settings.AimKey = inputType end
     end,
 })
 
--- ------------------- RAGE TAB -------------------
-local RageSection = RageTab:Section({ Title = "Rage Features (Coming Soon)" })
+-- Rage Tab
+local RageSection = RageTab:Section({ Title = "Rage Features" })
 
 RageSection:Toggle({
     Title = "Silent Aim",
     Default = Settings.SilentAim,
-    Callback = function(value)
-        Settings.SilentAim = value
-        -- Placeholder logic
-    end,
+    Callback = function(value) Settings.SilentAim = value end,
 })
 
 RageSection:Toggle({
     Title = "Triggerbot",
     Default = Settings.Triggerbot,
-    Callback = function(value)
-        Settings.Triggerbot = value
-        -- Placeholder
+    Callback = function(value) Settings.Triggerbot = value end,
+})
+
+RageSection:Keybind({
+    Title = "Triggerbot Key",
+    Default = "MouseButton1",
+    Callback = function(key)
+        local inputType = Enum.UserInputType[key]
+        if inputType then Settings.TriggerbotKey = inputType end
     end,
 })
 
 RageSection:Toggle({
     Title = "No Recoil",
     Default = Settings.NoRecoil,
-    Callback = function(value)
-        Settings.NoRecoil = value
-        -- Placeholder
-    end,
+    Callback = function(value) Settings.NoRecoil = value end,
 })
 
 RageSection:Toggle({
@@ -661,15 +721,19 @@ RageSection:Toggle({
     Default = Settings.RapidFire,
     Callback = function(value)
         Settings.RapidFire = value
-        -- Placeholder
+        applyRapidFire()
     end,
 })
 
+RageSection:Label({
+    Title = "Silent Aim redirects bullets to target.",
+})
 
 -- ====================== MAIN LOOP ======================
 RunService.RenderStepped:Connect(function()
     updateESP()
     updateFOVCircle()
+    applyNoRecoil()
     
     if Settings.Aimbot then
         local isKeyDown = UserInputService:IsMouseButtonPressed(Settings.AimKey)
@@ -679,6 +743,10 @@ RunService.RenderStepped:Connect(function()
                 aimAt(target)
             end
         end
+    end
+    
+    if Settings.Triggerbot then
+        triggerbotCheck()
     end
 end)
 
