@@ -771,7 +771,7 @@ Colors={
 }.IconFrame
 M.Parent=L
 elseif string.find(v,"http")then
-local M="WindUI/"..C.."/assets/."..F.."-"..x..".png"
+local M="WindUI_VyperEdition/"..C.."/assets/."..F.."-"..x..".png"
 local N,O=pcall(function()
 task.spawn(function()
 local N=p.Request{
@@ -12450,7 +12450,7 @@ Scale=aa.Scale,
 aa.UIScaleObj=av
 
 aa.ScreenGui=ap("ScreenGui",{
-Name="WindUI",
+Name="WindUI_VyperEdition",
 Parent=au,
 IgnoreGuiInset=true,
 ScreenInsets="None",
@@ -12477,17 +12477,17 @@ Name="ToolTips"
 })
 
 aa.NotificationGui=ap("ScreenGui",{
-Name="WindUI/Notifications",
+Name="WindUI_VyperEdition/Notifications",
 Parent=au,
 IgnoreGuiInset=true,
 })
 aa.DropdownGui=ap("ScreenGui",{
-Name="WindUI/Dropdowns",
+Name="WindUI_VyperEdition/Dropdowns",
 Parent=au,
 IgnoreGuiInset=true,
 })
 aa.TooltipGui=ap("ScreenGui",{
-Name="WindUI/Tooltips",
+Name="WindUI_VyperEdition/Tooltips",
 Parent=au,
 IgnoreGuiInset=true,
 })
