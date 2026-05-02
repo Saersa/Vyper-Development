@@ -3094,16 +3094,16 @@ end
 return aa end function a.s()
 return function(aa)
 return{
-Kronos={
-Name = "Kronos", -- theme name (neon red)
+KronosRed={
+Name = "Kronos Red",
     
-    Accent     = Color3.fromHex("#FF0000"),   -- bright neon red
-    Background = Color3.fromHex("#0A0000"),   -- deep dark red
-    Outline    = Color3.fromHex("#FF0000"),   -- neon red
-    Text       = Color3.fromHex("#FF0000"),   -- neon red text
-    Placeholder= Color3.fromHex("#CC0000"),   -- muted red
-    Button     = Color3.fromHex("#FF3333"),   -- vivid red button
-    Icon       = Color3.fromHex("#FF0000"),   -- red icons
+    Accent      = Color3.fromHex("#FF4D4D"),
+    Background  = Color3.fromHex("#0F0F0F"),
+    Outline     = Color3.fromHex("#1A1A1A"),
+    Text        = Color3.fromHex("#FFFFFF"),
+    Placeholder = Color3.fromHex("#666666"),
+    Button      = Color3.fromHex("#151515"),
+    Icon        = Color3.fromHex("#FF0000"),
 },
 
 
