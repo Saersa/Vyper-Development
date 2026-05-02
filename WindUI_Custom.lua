@@ -10716,8 +10716,10 @@ end
 
 
 
-
-
+local isAnonymous = au.User.Anonymous
+if type(isAnonymous) == "function" then
+IsAnonymous = IsAnonymous()
+end
 
 
 local aB
@@ -10838,7 +10840,7 @@ AutomaticSize="XY",
 BackgroundTransparency=1,
 },{
 al("TextLabel",{
-Text = au.User.Anonymous and"Anonymous"or af.LocalPlayer.DisplayName or game:GetService("Players").LocalPlayer.DisplayName,
+Text = IsAnonymous  and"Anonymous"or af.LocalPlayer.DisplayName or game:GetService("Players").LocalPlayer.DisplayName,
 
 TextSize=17,
 ThemeTag={
@@ -10855,7 +10857,7 @@ Name="DisplayName"
 
 
 al("TextLabel",{
-Text=au.User.Anonymous and"@Anonymous" or  "@"..af.LocalPlayer.Name or "@".. game:GetService("Players").LocalPlayer.Name,
+Text=IsAnonymous  and"@Anonymous" or  "@"..af.LocalPlayer.Name or "@".. game:GetService("Players").LocalPlayer.Name,
 TextSize=15,
 TextTransparency=.6,
 ThemeTag={
