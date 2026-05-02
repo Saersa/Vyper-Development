@@ -10716,11 +10716,11 @@ end
 
 
 
-local isAnonymous = au.User.Anonymous
-if type(isAnonymous) == "function" then
-IsAnonymous = IsAnonymous()
-end
+local IsAnonymous = au.User.Anonymous
 
+if type(IsAnonymous) == "function" then
+    IsAnonymous = IsAnonymous()
+end
 
 local aB
 if au.User then
