@@ -1,11 +1,11 @@
 --[[
-    VyperUI Modified
+    KronosUI Modified
 
     v0.0.1  |  09-03-2026  |  Roblox UI Library for scripts
     
     
     Author: Footagesus (Footages, .ftgs, oftgs)
-    Modified by: Vyper Development
+    Modified by: Kronos Development
     License: MIT
 ]]
 local Connections = {}
@@ -240,7 +240,7 @@ if not u then
 if m and m.Window and m.Window.Debug then local
 x, z=v:find":%d+: "
 
-warn("[ VyperUI: DEBUG Mode ] "..v)
+warn("[ KronosUI: DEBUG Mode ] "..v)
 
 return m:Notify{
 Title="DEBUG Mode: Error",
@@ -399,7 +399,7 @@ for x,z in pairs(v.Properties or{})do
 local A=p.GetThemeProperty(z,p.Theme)
 if A~=nil then
 if typeof(A)=="Color3"then
-local B=v.Object:FindFirstChild"VyperUIGradient"
+local B=v.Object:FindFirstChild"KronosUIGradient"
 if B then
 B:Destroy()
 end
@@ -412,10 +412,10 @@ end
 elseif typeof(A)=="table"and A.Color and A.Transparency then
 v.Object[x]=Color3.new(1,1,1)
 
-local B=v.Object:FindFirstChild"VyperUIGradient"
+local B=v.Object:FindFirstChild"KronosUIGradient"
 if not B then
 B=Instance.new"UIGradient"
-B.Name="VyperUIGradient"
+B.Name="KronosUIGradient"
 B.Parent=v.Object
 end
 
@@ -436,7 +436,7 @@ end
 end
 else
 
-local B=v.Object:FindFirstChild"VyperUIGradient"
+local B=v.Object:FindFirstChild"KronosUIGradient"
 if B then
 B:Destroy()
 end
@@ -771,7 +771,7 @@ Colors={
 }.IconFrame
 M.Parent=L
 elseif string.find(v,"http")then
-local M="VyperUI/"..C.."/assets/."..F.."-"..x..".png"
+local M="KronosUI/"..C.."/assets/."..F.."-"..x..".png"
 local N,O=pcall(function()
 task.spawn(function()
 local N=p.Request{
@@ -786,7 +786,7 @@ local O,P=pcall(getcustomasset,M)
 if O then
 L.ImageLabel.Image=P
 else
-warn(string.format("[ VyperUI.Creator ] Failed to load custom asset '%s': %s",M,tostring(P)))
+warn(string.format("[ KronosUI.Creator ] Failed to load custom asset '%s': %s",M,tostring(P)))
 L:Destroy()
 
 return
@@ -794,7 +794,7 @@ end
 end)
 end)
 if not N then
-warn("[ VyperUI.Creator ]  '"..identifyexecutor().."' doesnt support the URL Images. Error: "..O)
+warn("[ KronosUI.Creator ]  '"..identifyexecutor().."' doesnt support the URL Images. Error: "..O)
 
 L:Destroy()
 end
@@ -1570,10 +1570,10 @@ end function a.i()
 
 return[[
 {
-    "name": "VyperUI",
+    "name": "KronosUI",
     "version": "1.6.63",
     "main": "./dist/main.lua",
-    "repository": "https://github.com/Footagesus/VyperUI",
+    "repository": "https://github.com/Footagesus/KronosUI",
     "discord": "https://discord.gg/ftgs-development-hub-1300692552005189632",
     "author": "Footagesus",
     "description": "Roblox UI Library for scripts",
@@ -2047,7 +2047,7 @@ local ae=a.load'j'.New
 local af=a.load'k'.New
 
 function aa.new(ag,ah,ai,aj)
-local ak=a.load'l'.Init(nil,ag.VyperUI.ScreenGui.KeySystem)
+local ak=a.load'l'.Init(nil,ag.KronosUI.ScreenGui.KeySystem)
 local al=ak.Create(true)
 
 local am={}
@@ -2358,7 +2358,7 @@ PaddingBottom=UDim.new(0,10),
 })
 
 for d,f in next,ag.KeySystem.API do
-local g=ag.VyperUI.Services[f.Type]
+local g=ag.KronosUI.Services[f.Type]
 if g then
 local h={}
 for j,l in next,g.Args do
@@ -2444,7 +2444,7 @@ ad(r,0.08,{ImageTransparency=1}):Play()
 end)
 ab.AddSignal(r.MouseButton1Click,function()
 m.Copy()
-ag.VyperUI:Notify{
+ag.KronosUI:Notify{
 Title="Key System",
 Content="Key link copied to clipboard.",
 Image="key",
@@ -2489,7 +2489,7 @@ task.wait(.4)
 ai(true)
 end
 else
-ag.VyperUI:Notify{
+ag.KronosUI:Notify{
 Title="Key System. Error",
 Content="Invalid key.",
 Icon="triangle-alert",
@@ -2523,7 +2523,7 @@ end
 if aC then
 handleSuccess(aA)
 else
-ag.VyperUI:Notify{
+ag.KronosUI:Notify{
 Title="Key System. Error",
 Content=aD,
 Icon="triangle-alert",
@@ -2918,7 +2918,7 @@ Buttons=ae.Buttons,
 IconSize=22,
 }
 
-local ag=a.load'l'.Init(nil,ae.VyperUI.ScreenGui.Popups)
+local ag=a.load'l'.Init(nil,ae.KronosUI.ScreenGui.Popups)
 local ah=ag.Create(true,"Popup")
 
 local ai=200
@@ -2940,7 +2940,7 @@ ak=ab.Image(
 af.Icon,
 af.Title..":"..af.Icon,
 0,
-ae.VyperUI.Window,
+ae.KronosUI.Window,
 "Popup",
 true,
 ae.IconThemed,
@@ -3094,17 +3094,16 @@ end
 return aa end function a.s()
 return function(aa)
 return{
-Vyper={
-Name="Vyper",
-
-Accent=Color3.fromHex"#080808",
-Dialog=Color3.fromHex"#0C0C0C",
-Outline=Color3.fromHex"#FFFFFF",
-Text=Color3.fromHex"#FFFFFF",
-Placeholder=Color3.fromHex"#FFFFFF",
-Background=Color3.fromHex"#0e0e10",
-Button=Color3.fromHex"#666666",
-Icon=Color3.fromHex"#44C32C"
+Kronos={
+Name = "Kronos", -- theme name (neon red)
+    
+    Accent     = Color3.fromHex("#FF0000"),   -- bright neon red
+    Background = Color3.fromHex("#0A0000"),   -- deep dark red
+    Outline    = Color3.fromHex("#FF0000"),   -- neon red
+    Text       = Color3.fromHex("#FF0000"),   -- neon red text
+    Placeholder= Color3.fromHex("#CC0000"),   -- muted red
+    Button     = Color3.fromHex("#FF3333"),   -- vivid red button
+    Icon       = Color3.fromHex("#FF0000"),   -- red icons
 },
 
 
@@ -3873,18 +3872,18 @@ end
 
 function ad.Init(ae,af)
 if not af.Folder then
-warn"[ VyperUI.ConfigManager ] Window.Folder is not specified."
+warn"[ KronosUI.ConfigManager ] Window.Folder is not specified."
 return false
 end
 
 ac=af
 ad.Folder=ac.Folder
-ad.Path="Vyper/config/"
+ad.Path="Kronos/config/"
 
-if not isfolder("Vyper")then
-makefolder("Vyper")
-if not isfolder("Vyper/config/")then
-makefolder("Vyper/config/")
+if not isfolder("Kronos")then
+makefolder("Kronos")
+if not isfolder("Kronos/config/")then
+makefolder("Kronos/config/")
 end
 end
 
@@ -3984,7 +3983,7 @@ end
 
 local aj,ak=pcall(function()
 local aj=readfile or function()
-warn"[ VyperUI.ConfigManager ] The config system doesn't work in the studio."
+warn"[ KronosUI.ConfigManager ] The config system doesn't work in the studio."
 return nil
 end
 return ab:JSONDecode(aj(ah.Path))
@@ -4071,9 +4070,9 @@ local ak,al=pcall(function()
 return ah:Load()
 end)
 if ak then
-if ac.Debug then print("[ VyperUI.ConfigManager ] AutoLoaded config: "..af)end
+if ac.Debug then print("[ KronosUI.ConfigManager ] AutoLoaded config: "..af)end
 else
-warn("[ VyperUI.ConfigManager ] Failed to AutoLoad config: "..af.." - "..tostring(al))
+warn("[ KronosUI.ConfigManager ] Failed to AutoLoad config: "..af.." - "..tostring(al))
 end
 end)
 end
@@ -6660,7 +6659,7 @@ Position=UDim2.new(-10,0,-10,0),
 Visible=false,
 Active=false,
 
-Parent=am.VyperUI.DropdownGui,
+Parent=am.KronosUI.DropdownGui,
 AnchorPoint=Vector2.new(1,0),
 },{
 an.UIElements.Menu,
@@ -7766,7 +7765,7 @@ toclipboard(al.Code)
 if al.OnCopy then al.OnCopy()end
 end)
 if not ao then
-ak.VyperUI:Notify{
+ak.KronosUI:Notify{
 Title="Error",
 Content="The "..an.." is not copied. Error: "..ap,
 Icon="x",
@@ -7774,7 +7773,7 @@ Duration=5,
 }
 end
 end
-end,ak.VyperUI.UIScale,al)
+end,ak.KronosUI.UIScale,al)
 
 function al.SetCode(ao,ap)
 an.Set(ap)
@@ -8713,7 +8712,7 @@ al.ElementFrame=ar
 
 local as=ak.ElementsModule
 
-as.Load(al,ar.Content,as.Elements,ak.Window,ak.VyperUI,function()
+as.Load(al,ar.Content,as.Elements,ak.Window,ak.KronosUI,function()
 if not al.Expandable then
 al.Expandable=true
 an.Visible=true
@@ -8929,7 +8928,7 @@ ak,
 al,
 am.Elements,
 aj.Window,
-aj.VyperUI,
+aj.KronosUI,
 function(an,ao)
 local ap=aj.Tab and aj.Tab.Gap or(aj.Window.NewElements and 1 or 6)
 
@@ -9009,7 +9008,7 @@ ar.Index=#aa.Elements+1
 ar.GlobalIndex=#ah.AllElements+1
 ar.Parent=ae
 ar.Window=ah
-ar.VyperUI=aj
+ar.KronosUI=aj
 ar.UIScale=am
 ar.ElementsModule=al local
 
@@ -9032,7 +9031,7 @@ end)
 if ax then
 ah.PendingConfigData[ar.Flag]=nil
 else
-warn("[ VyperUI ] Failed to apply pending config for '"..ar.Flag.."': "..tostring(ay))
+warn("[ KronosUI ] Failed to apply pending config for '"..ar.Flag.."': "..tostring(ay))
 end
 end)
 end
@@ -9142,7 +9141,7 @@ OnChangeFunc=function(am)end
 
 function am.Init(an,ao,ap,aq)
 Window=an
-VyperUI=ao
+KronosUI=ao
 am.ToolTipParent=ap
 am.TabHighlight=aq
 return am
@@ -9542,7 +9541,7 @@ end
 
 local az=a.load'T'
 
-az.Load(ap,ap.UIElements.ContainerFrame,az.Elements,Window,VyperUI,nil,az,ao)
+az.Load(ap,ap.UIElements.ContainerFrame,az.Elements,Window,KronosUI,nil,az,ao)
 
 
 
@@ -10512,11 +10511,11 @@ au.Topbar={Height=52,ButtonsType="Default"}
 end
 
 if au.Folder then
-if not isfolder("Vyper/"..au.Folder)then
-makefolder("Vyper/"..au.Folder)
+if not isfolder("Kronos/"..au.Folder)then
+makefolder("Kronos/"..au.Folder)
 end
-if not isfolder("Vyper/assets")then
-makefolder("Vyper/assets")
+if not isfolder("Kronos/assets")then
+makefolder("Kronos/assets")
 end
 if not isfolder(au.Folder)then
 makefolder(au.Folder)
@@ -10977,7 +10976,7 @@ local g=ak.Request{Url=b,Method="GET",Headers={["User-Agent"]="Roblox/Exploit"}}
 writefile(f,g.Body)
 end)
 if not g then
-warn("[ VyperUI.Window.Background ] Failed to download video: "..tostring(h))
+warn("[ KronosUI.Window.Background ] Failed to download video: "..tostring(h))
 return
 end
 end
@@ -10986,10 +10985,10 @@ local g,h=pcall(function()
 return getcustomasset(f)
 end)
 if not g then
-warn("[ VyperUI.Window.Background ] Failed to load custom asset: "..tostring(h))
+warn("[ KronosUI.Window.Background ] Failed to load custom asset: "..tostring(h))
 return
 end
-warn"[ VyperUI.Window.Background ] VideoFrame may not work with custom video"
+warn"[ KronosUI.Window.Background ] VideoFrame may not work with custom video"
 b=h
 end
 
@@ -11119,7 +11118,7 @@ Parent=as.Parent,
 AnchorPoint=Vector2.new(0.5,0.5),
 Active=true,
 },{
-as.VyperUI.UIScaleObj,
+as.KronosUI.UIScaleObj,
 au.AcrylicPaint and au.AcrylicPaint.Frame or nil,
 aA,
 ak.NewRoundFrame(au.UICorner,"Squircle",{
@@ -11252,13 +11251,13 @@ PaddingBottom=UDim.new(0,au.UIPadding),
 
 ak.AddSignal(au.UIElements.Main.Main.Topbar.Left:GetPropertyChangedSignal"AbsoluteSize",function()
 local l=0
-local m=au.UIElements.Main.Main.Topbar.Right.UIListLayout.AbsoluteContentSize.X/as.VyperUI.UIScale
+local m=au.UIElements.Main.Main.Topbar.Right.UIListLayout.AbsoluteContentSize.X/as.KronosUI.UIScale
 
 
 
 
 
-l=au.UIElements.Main.Main.Topbar.Left.AbsoluteSize.X/as.VyperUI.UIScale
+l=au.UIElements.Main.Main.Topbar.Left.AbsoluteSize.X/as.KronosUI.UIScale
 if au.Topbar.ButtonsType~="Default"then
 l=l+m+au.UIPadding-4
 end
@@ -11267,13 +11266,13 @@ end
 
 au.UIElements.Main.Main.Topbar.Center.Position=UDim2.new(
 0,
-l+(au.UIPadding/as.VyperUI.UIScale),
+l+(au.UIPadding/as.KronosUI.UIScale),
 0.5,
 0
 )
 au.UIElements.Main.Main.Topbar.Center.Size=UDim2.new(
 1,
--l-m-((au.UIPadding*2)/as.VyperUI.UIScale),
+-l-m-((au.UIPadding*2)/as.KronosUI.UIScale),
 1,
 0
 )
@@ -11281,7 +11280,7 @@ end)
 
 if au.Topbar.ButtonsType~="Default"then
 ak.AddSignal(au.UIElements.Main.Main.Topbar.Right:GetPropertyChangedSignal"AbsoluteSize",function()
-au.UIElements.Main.Main.Topbar.Left.Position=UDim2.new(0,(au.UIElements.Main.Main.Topbar.Right.AbsoluteSize.X/as.VyperUI.UIScale)+au.UIPadding-4,0,0)
+au.UIElements.Main.Main.Topbar.Left.Position=UDim2.new(0,(au.UIElements.Main.Main.Topbar.Right.AbsoluteSize.X/as.KronosUI.UIScale)+au.UIPadding-4,0,0)
 end)
 end
 
@@ -11416,7 +11415,7 @@ end
 au.UIElements.BackgroundGradient=ak.NewRoundFrame(au.UICorner,"Squircle",{
 Size=UDim2.new(1,0,1,0),
 Parent=au.UIElements.Main.Background,
-ImageTransparency=au.Transparent and as.VyperUI.TransparencyValue or 0
+ImageTransparency=au.Transparent and as.KronosUI.TransparencyValue or 0
 },{
 m
 })
@@ -11519,7 +11518,7 @@ end
 
 function au.SetBackgroundTransparency(m,p)
 local r=math.floor(tonumber(p)*10+0.5)/10
-as.VyperUI.TransparencyValue=r
+as.KronosUI.TransparencyValue=r
 au:ToggleTransparency(r>0)
 end
 
@@ -11594,7 +11593,7 @@ function au.OnDestroy(r,u)
 au.OnDestroyCallback=u
 end
 
-if as.VyperUI.UseAcrylic then
+if as.KronosUI.UseAcrylic then
 au.AcrylicPaint.AddParent(au.UIElements.Main)
 end
 
@@ -11626,7 +11625,7 @@ task.wait(.06)
 au.Closed=false
 
 am(au.UIElements.Main.Background,0.2,{
-ImageTransparency=au.Transparent and as.VyperUI.TransparencyValue or 0,
+ImageTransparency=au.Transparent and as.KronosUI.TransparencyValue or 0,
 },Enum.EasingStyle.Quint,Enum.EasingDirection.Out):Play()
 
 if au.UIElements.BackgroundGradient then
@@ -11678,7 +11677,7 @@ task.spawn(function()
 task.wait(.05)
 au.UIElements.Main:WaitForChild"Main".Visible=true
 
-as.VyperUI:ToggleAcrylic(true)
+as.KronosUI:ToggleAcrylic(true)
 end)
 end)
 end
@@ -11691,7 +11690,7 @@ ak.SafeCallback(au.OnCloseCallback)
 end)
 end
 
-as.VyperUI:ToggleAcrylic(false)
+as.KronosUI:ToggleAcrylic(false)
 
 au.UIElements.Main:WaitForChild"Main".Visible=false
 
@@ -11752,10 +11751,10 @@ au.AcrylicPaint.Model:Destroy()
 end
 au.Destroyed=true
 task.wait(0.4)
-as.VyperUI.ScreenGui:Destroy()
-as.VyperUI.NotificationGui:Destroy()
-as.VyperUI.DropdownGui:Destroy()
-as.VyperUI.TooltipGui:Destroy()
+as.KronosUI.ScreenGui:Destroy()
+as.KronosUI.NotificationGui:Destroy()
+as.KronosUI.DropdownGui:Destroy()
+as.KronosUI.TooltipGui:Destroy()
 
 
 for i, v in pairs(Connections) do
@@ -11789,9 +11788,9 @@ end
 function au.ToggleTransparency(r,u)
 
 au.Transparent=u
-as.VyperUI.Transparent=u
+as.KronosUI.Transparent=u
 
-au.UIElements.Main.Background.ImageTransparency=u and as.VyperUI.TransparencyValue or 0
+au.UIElements.Main.Background.ImageTransparency=u and as.KronosUI.TransparencyValue or 0
 
 au.UIElements.MainBar.Background.ImageTransparency=u and 0.97 or 0.95
 
@@ -11827,12 +11826,12 @@ return u
 end
 
 function au.GetUIScale(r,u)
-return as.VyperUI.UIScale
+return as.KronosUI.UIScale
 end
 
 function au.SetUIScale(r,u)
-as.VyperUI.UIScale=u
-am(as.VyperUI.UIScaleObj,.2,{Scale=u},Enum.EasingStyle.Quint,Enum.EasingDirection.Out):Play()
+as.KronosUI.UIScale=u
+am(as.KronosUI.UIScaleObj,.2,{Scale=u},Enum.EasingStyle.Quint,Enum.EasingDirection.Out):Play()
 return au
 end
 
@@ -11908,14 +11907,14 @@ end
 
 local r=a.load'U'
 local u=a.load'V'
-local v=r.Init(au,as.VyperUI,as.VyperUI.TooltipGui)
+local v=r.Init(au,as.KronosUI,as.KronosUI.TooltipGui)
 v:OnChange(function(x)au.CurrentTab=x end)
 
 au.TabModule=v
 
 function au.Tab(x,B)
 B.Parent=au.UIElements.SideBar.Frame
-return v.New(B,as.VyperUI.UIScale)
+return v.New(B,as.KronosUI.UIScale)
 end
 
 function au.SelectTab(x,B)
@@ -11923,7 +11922,7 @@ v:SelectTab(B)
 end
 
 function au.Section(x,B)
-return u.New(B,au.UIElements.SideBar.Frame,au.Folder,as.VyperUI.UIScale,au)
+return u.New(B,au.UIElements.SideBar.Frame,au.Folder,as.KronosUI.UIScale,au)
 end
 
 function au.IsResizable(x,B)
@@ -12115,8 +12114,8 @@ end
 
 wait()
 
-local S=L.AbsoluteContentSize.X/as.VyperUI.UIScale
-local T=M.AbsoluteSize.X/as.VyperUI.UIScale
+local S=L.AbsoluteContentSize.X/as.KronosUI.UIScale
+local T=M.AbsoluteSize.X/as.KronosUI.UIScale
 
 if S>T then
 L.FillDirection=Enum.FillDirection.Vertical
@@ -12135,7 +12134,7 @@ local V
 local W=math.huge
 
 for X,Y in ipairs(N)do
-local _=Y.AbsoluteSize.X/as.VyperUI.UIScale
+local _=Y.AbsoluteSize.X/as.KronosUI.UIScale
 if _<W then
 W=_
 V=Y
@@ -12450,7 +12449,7 @@ Scale=aa.Scale,
 aa.UIScaleObj=av
 
 aa.ScreenGui=ap("ScreenGui",{
-Name="VyperUI",
+Name="KronosUI",
 Parent=au,
 IgnoreGuiInset=true,
 ScreenInsets="None",
@@ -12477,17 +12476,17 @@ Name="ToolTips"
 })
 
 aa.NotificationGui=ap("ScreenGui",{
-Name="VyperUI/Notifications",
+Name="KronosUI/Notifications",
 Parent=au,
 IgnoreGuiInset=true,
 })
 aa.DropdownGui=ap("ScreenGui",{
-Name="VyperUI/Dropdowns",
+Name="KronosUI/Dropdowns",
 Parent=au,
 IgnoreGuiInset=true,
 })
 aa.TooltipGui=ap("ScreenGui",{
-Name="VyperUI/Tooltips",
+Name="KronosUI/Tooltips",
 Parent=au,
 IgnoreGuiInset=true,
 })
@@ -12622,7 +12621,7 @@ end
 
 
 function aa.Popup(ax,ay)
-ay.VyperUI=aa
+ay.KronosUI=aa
 return a.load'r'.new(ay)
 end
 
@@ -12655,8 +12654,8 @@ end
 function aa.CreateWindow(ax,ay)
     local az=a.load'Y'
 
-    if not isfolder"Vyper"then
-    makefolder"Vyper"
+    if not isfolder"Kronos"then
+    makefolder"Kronos"
     end
     
     if ay.Folder then
@@ -12666,7 +12665,7 @@ function aa.CreateWindow(ax,ay)
         makefolder(ay.Title)
         end
 
-    ay.VyperUI=aa
+    ay.KronosUI=aa
     ay.Parent=aa.ScreenGui.Window
 
     if aa.Window then
