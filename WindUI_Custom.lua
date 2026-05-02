@@ -3102,11 +3102,7 @@ Name = "Kronos Red",
     Outline     = Color3.fromHex("#1A1A1A"),
     Text        = Color3.fromHex("#FFFFFF"),
     Placeholder = Color3.fromHex("#666666"),
-<<<<<<< Updated upstream
-    Button      = Color3.fromHex("#252525"),
-=======
-    Button      = Color3.fromHex("#151515"),
->>>>>>> Stashed changes
+    Button      = Color3.fromHex("#FF3131"), 
     Icon        = Color3.fromHex("#FF0000"),
 },
 
