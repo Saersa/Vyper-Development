@@ -618,4 +618,8 @@ RunService.RenderStepped:Connect(function()
     end
     
     
+<<<<<<< Updated upstream
 end)
+=======
+end)
+>>>>>>> Stashed changes
